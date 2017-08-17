@@ -251,3 +251,105 @@ newpostGS <- ExcludeNANotGiven(Epostworkshop)
 plotByGenderStatus(newpreGS, "Pre-survey filtered")
 plotByGenderStatus(newpostGS, "Post-survey filtered")
 
+multiplot(plotByGender(newpreGS, "Pre- survey"), 
+          plotByGender(newpostGS, "Post- survey"), cols=2)
+
+######
+colnames(Epreworkshop)
+head(Epreworkshop[,1:2])
+class(Epreworkshop[,1])
+
+levels(Epreworkshop$Race)
+table(Epreworkshop$Race)
+
+
+plotByRace <- function(df, ti){ 
+  ps <- ggplot(data = df, aes( x = Race, fill = Race )) +
+    #coord_flip() +
+    geom_bar(aes(y = (..count..)/sum(..count..)) ) +
+    scale_fill_manual(values = cbPalette) +
+    theme_light() +
+    labs(x = "Race", y = paste("Total respondents", dim(df)[1], "in percentage ")) +
+    ggtitle(paste(ti, "responses by race") ) +
+    scale_y_continuous(labels = scales::percent) +
+    theme(plot.title = element_text(hjust = 0.5)) +
+    theme(axis.text.x=element_blank(),
+          axis.ticks.x=element_blank(),
+          legend.position="bottom",
+          legend.title = element_blank())
+  print(ps)
+}
+
+plotByRace(Epreworkshop, "Pre- survey")
+
+dim(Epreworkshop)
+dim(subset(Epreworkshop, Race != ""))
+a <- subset(Epreworkshop, Race != "")
+plotByRace(a, "Pre- survey")
+
+colnames(Epreworkshop)
+table(Epreworkshop$Gender)
+table(Epreworkshop$With.Friend)
+table(Epreworkshop$Gender, Epreworkshop$With.Friend)
+
+
+
+
+#############################################
+plotByGenderGeneric <- function(df, ti, colna, colstr){
+  #StartbyFiltering Gender Not Answer or not provided
+  print(dim(df))
+  x <- subset(df, df$Gender == "Male" | df$Gender == "Female") 
+  x <- droplevels(x)
+  print(dim(x))
+  print(colna)
+  y <- droplevels(subset(x, x[[colna]] != ""))
+  print(dim(y))
+  print(table(y[[colna]]))
+  #####Plot Function Generic
+  ps <- ggplot(data = y, aes( x = Gender, fill= Gender)) +
+
+    geom_bar(aes(y = (..count..)/sum(..count..))) +
+    scale_fill_manual(values = cbPalette) +
+    theme_light() +
+    labs(x = "Gender", y = paste("Total respondents", dim(y)[1], "in percentage ")) +
+    ggtitle(paste(ti, "responses by gender and", colstr)) +
+    scale_y_continuous(labels = scales::percent) +
+    theme(plot.title = element_text(hjust = 0.5)) +
+    theme(axis.text.x=element_blank(),
+          axis.ticks.x=element_blank(),
+          legend.position="bottom",
+          legend.title = element_blank())+
+    facet_grid(reformulate(colna), ".") # . ~ colna
+  print(ps)
+  ggsave(filename =  paste("./plots/FilteredGendervs", gsub("\\s", "",colstr),
+                           "-",ti,".png", sep = ""),
+         width = 12, height = 6, dpi = 120)
+}
+
+#plotByGenderGeneric <- function(df, ti, colna, colstr)
+plotByGenderGeneric(Epreworkshop, "Pre-survey", "With.Friend" , "attended the workshop with a friend")
+plotByGenderGeneric(Epreworkshop, "Pre-survey", "Discipline" , "discipline")
+plotByGenderGeneric(Epreworkshop, "Pre-survey", "OS" , "operative system")
+plotByGenderGeneric(Epreworkshop, "Pre-survey", "Programming.Usage" , "programming usage")
+
+### I'm not sure why there is 7 columns for current tools "Current.Tools.1" to "Current.Tools.7"
+
+plotByGenderGeneric(Epreworkshop, "Pre-survey", "Have.Dataset" , "have dataset")
+plotByGenderGeneric(Epreworkshop, "Pre-survey", "Data.Organization" , "importance of data organization")
+plotByGenderGeneric(Epreworkshop, "Pre-survey", "Using.Scripting.Language" , "importance of using scripting language")
+plotByGenderGeneric(Epreworkshop, "Pre-survey", "Using.R.or.Python" , "importance of using R or Python")
+plotByGenderGeneric(Epreworkshop, "Pre-survey", "Value.of.SQL.or.Python" , "importance of using SQL or Python")
+plotByGenderGeneric(Epreworkshop, "Pre-survey", "Age" , "age")
+plotByGenderGeneric(Epreworkshop, "Pre-survey", "Race" , "race")
+plotByGenderGeneric(Epreworkshop, "Pre-survey", "First.Time" , "first time taking a DC as learner")
+plotByGenderGeneric(Epreworkshop, "Pre-survey", "Workshop.in.US" , "workshop taken in the US")
+### Very important the question of gender was only asked to people in the US
+# table(Epreworkshop$Workshop.in.US, Epreworkshop$Gender)
+# 
+# Female Male Prefer not to say No Answer
+# 0    0                 0       446
+# No       0    0                 0       590
+# Yes    717  540                22        28
+
+
