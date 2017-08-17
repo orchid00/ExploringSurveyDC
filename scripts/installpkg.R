@@ -1,0 +1,25 @@
+#
+#   Description: Setting up the environment before running analysis
+#                Run this script first
+#   Date: 2017, August 12
+#   Copyright (C) 2017 Paula Andrea Martinez
+#
+
+
+# To run the analysis some packages need to be previously installed.
+# Check installed packages before installing new packages.
+list.of.packages <- c("knitr", "tidyr", "tidyverse", "ggplot2", "dplyr",
+                      "readr","purrr", "tible", "DBI", "ggmap", "likert",
+                      "mapproj", "RColorBrewer", "forcats")
+
+
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+
+# Setting up folder structure
+if (! file.exists("data")) dir.create("data")
+if (! file.exists("rawdata")) dir.create("rawdata")
+if (! file.exists("plots")) dir.create("plots")
+if (! file.exists("scripts")) dir.create("scripts")
+
+
