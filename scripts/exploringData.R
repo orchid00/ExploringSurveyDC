@@ -72,6 +72,15 @@ levels(Epreworkshop$Gender)
 Epreworkshop$Status <- reorderLevels(Epreworkshop$Status, c(8,3,6,2,7,4,5,1))
 
 #postworkshop cleaning data
+dim(Epostworkshop)
+levels(Epostworkshop$Gender)
+levels(Epostworkshop$Status)
+Epostworkshop[1, 1:10]
+# Postworkshop Status has one extra level "Response" only in row 1, now removed 
+Epostworkshop <- Epostworkshop[-c(1), ]
+Epostworkshop <- droplevels(Epostworkshop)
+dim(Epostworkshop)
+
 levels(Epostworkshop$Gender)
 levels(Epostworkshop$Status)
 
@@ -83,14 +92,8 @@ levels(Epostworkshop$Status)[5] <- "Other"
 levels(Epostworkshop$Gender)
 levels(Epostworkshop$Status)
 
-# Postworkshop Status has one extra level "Response" changing this to Other
-rm(g)
-g <- Epostworkshop$Status
-levels(g)
-levels(g)[7] <- "Other"
-levels(g)
-Epostworkshop$Status <- g
 
+#Reorder levels in Gender and Status
 Epostworkshop$Gender <- reorderLevels(Epostworkshop$Gender, c(2,3,4,1))
 levels(Epostworkshop$Gender)
 Epostworkshop$Status <- reorderLevels(Epostworkshop$Status, c(8,3,6,2,7,4,5,1))
@@ -251,8 +254,8 @@ newpostGS <- ExcludeNANotGiven(Epostworkshop)
 plotByGenderStatus(newpreGS, "Pre-survey filtered")
 plotByGenderStatus(newpostGS, "Post-survey filtered")
 
-multiplot(plotByGender(newpreGS, "Pre- survey"), 
-          plotByGender(newpostGS, "Post- survey"), cols=2)
+multiplot(plotByGender(newpreGS, "Pre-survey"), 
+          plotByGender(newpostGS, "Post-survey"), cols=2)
 
 ######
 colnames(Epreworkshop)
@@ -354,13 +357,16 @@ plotByGenderGeneric(Epreworkshop, "Pre-survey", "Workshop.in.US" , "workshop tak
 
 
 #############################################
-plotByStatusGeneric <- function(df, ti, colna, colstr){
+plotByStatusGeneric <- function(df, ti, colna, colstr, reorderingvec = NULL){
   #StartbyFiltering colna Not Answered
   print(dim(df))
   print(colna)
   y <- droplevels(subset(df, df[[colna]] != ""))
   print(dim(y))
   print(table(y[[colna]]))
+  if(!is.null(reorderingvec)){
+    y[[colna]] <- reorderLevels(y[[colna]], reorderingvec)
+  }
   #####Plot Function Generic
   ps <- ggplot(data = y, aes( x = Status, fill= Status)) +
     #coord_flip() +
@@ -382,26 +388,108 @@ plotByStatusGeneric <- function(df, ti, colna, colstr){
          width = 12, height = 6, dpi = 120)
 }
 
-#plotByStatusGeneric(df, ti, colna, colstr)
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "Gender" , "gender")
-#not very useful as gender is only asked in the US
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "With.Friend" , "attended with a friend")
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "Discipline" , "discipline")
-# too many variables
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "OS" , "operative system")
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "Programming.Usage" , "programming usage")
+#plotByStatusGeneric(df, ti, colna, colstr, order)
+table(Epreworkshop$First.Time)
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "First.Time" , "first time taking a DC as learner", c(2,1))
 
+table(Epreworkshop$Discipline) # too many variables
+table(Epreworkshop$OS)
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "OS" , "operative system", c(4,1,2,3))
+table(Epreworkshop$With.Friend)
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "With.Friend" , "attended with a friend", c(3,1,2))
+table(Epreworkshop$Programming.Usage)
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Programming.Usage" , "programming usage", c(2, 3, 6, 4, 7, 1, 5))
 ### I'm not sure why there is 7 columns for current tools "Current.Tools.1" to "Current.Tools.7"
+table(Epreworkshop$Have.Dataset)
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Have.Dataset" , "have dataset", c(3, 4, 1, 2))
+table(Epreworkshop$Data.Organization)
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Data.Organization" , "importance of data organization", c(4, 1, 3, 2, 5))
+table(Epreworkshop$Using.Scripting.Language)
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Using.Scripting.Language" , "importance of using scripting language", c(4, 1, 3, 2, 5))
+table(Epreworkshop$Using.R.or.Python)
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Using.R.or.Python" , "importance of using R or Python", c(4, 1, 3, 2, 5))
+table(Epreworkshop$Value.of.SQL.or.Python)
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Value.of.SQL.or.Python" , "accidentaly changing data in R, SQL or Python", c(4, 1, 3, 2, 5))
 
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "Have.Dataset" , "have dataset")
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "Data.Organization" , "importance of data organization")
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "Using.Scripting.Language" , "importance of using scripting language")
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "Using.R.or.Python" , "importance of using R or Python")
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "Value.of.SQL.or.Python" , "importance of using SQL or Python")
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "First.Time" , "first time taking a DC as learner")
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "Workshop.in.US" , "workshop taken in the US")
+table(Epreworkshop$Workshop.in.US)
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Workshop.in.US" , "workshop taken in the US", c(2,1))
+table(Epreworkshop$Age)
 plotByStatusGeneric(Epreworkshop, "Pre-survey", "Age" , "age")
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "Race" , "race")
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Gender" , "gender")
+table(Epreworkshop$Race)
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Race" , "race", c(8, 2, 1,3,4,5,6,7))
 
+#####################################
+#Comments on postsurvey data
+# there is not much to do with columns that are repeated with the pre-survey 
+# for example
+# "Start.Date"                "End.Date"                  "When.Taking.Survey"        "First.Time"  
+# "Research" is a text field wich is difficult to categorize
+# Status can be ploted easily I already order it and removed not answered, plus added Response into Other
+# Undergraduate student      Graduate student              Post-doc               Faculty                 Staff 
+# 60                   435                   144                    96                   184 
+# Industry                 Other             No Answer 
+# 7                    80                    76 
 
-
+# Rate your level of involvement
+table(Epostworkshop$Involvement)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Involvement" , "level of involvement", c(1,3,2))
+table(Epostworkshop$Practical.Knowledge)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Practical.Knowledge" , "practical knowledge gained", c(1, 3, 2))
+table(Epostworkshop$Organize.Data)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Organize.Data" , "better understanding on how to organize data in spreadsheets", c(5, 1, 4, 2, 6, 3))
+# has a weird extra category Effectively organize data in spreadsheets
+table(Epostworkshop$Use.OpenRefine)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Use.OpenRefine" , "better understanding on how to use OpenRefine for data cleaning", c(5, 1, 4, 2, 6, 3))
+# has a weird extra category Use OpenRefine for data cleaning
+table(Epostworkshop$Import.Python)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Import.Python" , "better understanding on how to import a file in Python and work with the data", c(5, 1, 4, 2, 6, 3))
+table(Epostworkshop$Import.R)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Import.R" , "better understanding on how to to import a file into R and with the data", c(5, 1, 4, 2, 6, 3))
+table(Epostworkshop$Visualizations.in.Python)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Visualizations.in.Python" , "better understanding on how to do visualizations in Python", c(5, 1, 4, 2, 6, 3))
+table(Epostworkshop$Visualizations.in.R)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Visualizations.in.R" , "better understanding on how to do visualizations in R", c(5, 1, 4, 2, 6, 3))
+table(Epostworkshop$Construct.SQL)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Construct.SQL" , "better understanding on how to construct SQL queries", c(5, 1, 4, 2, 6, 3))
+table(Epostworkshop$Use.command.line)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Use.command.line" , "better understanding on how to use command line", c(5, 1, 4, 2, 6, 3))
+table(Epostworkshop$Skill.Level.Prior)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Skill.Level.Prior" , "data management and analysis skills prior the workshop", c(5, 2, 3, 1, 4))
+table(Epostworkshop$Skill.Level.Following)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Skill.Level.Following" , "data management and analysis skills following the workshop", c(1, 4, 2, 3))
+table(Epostworkshop$Application)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Application" , "can immediately applied what was learned at the workshop", c(4,1,3,2,5))
+table(Epostworkshop$Worth.My.Time)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Worth.My.Time" , "the workshop was worth my time", c(4,1,3,2,5))
+table(Epostworkshop$Worth.My.Time)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Worth.My.Time" , "the workshop was worth my time", c(4,1,3,2,5))
+table(Epostworkshop$Worth.My.Time)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Worth.My.Time" , "the workshop was worth my time", c(4,1,3,2,5))
+table(Epostworkshop$Worth.My.Time)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Worth.My.Time" , "the workshop was worth my time", c(4,1,3,2,5))
+table(Epostworkshop$Worth.My.Time)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Worth.My.Time" , "the workshop was worth my time", c(4,1,3,2,5))
+table(Epostworkshop$Worth.My.Time)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Worth.My.Time" , "the workshop was worth my time", c(4,1,3,2,5))
+table(Epostworkshop$Worth.My.Time)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Worth.My.Time" , "the workshop was worth my time", c(4,1,3,2,5))
+table(Epostworkshop$Worth.My.Time)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Worth.My.Time" , "the workshop was worth my time", c(4,1,3,2,5))
+table(Epostworkshop$Material)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Material" , "the material matched the workshop description", c(4,1,3,2,5))
+table(Epostworkshop$Recommend)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Recommend" , "would recommend this workshop", c(4,1,3,2,5))
+table(Epostworkshop$Instructors.Effective)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Instructors.Effective" , "were the instructors effective in teaching the workshop", c(1,2,5, 4, 3))
+table(Epostworkshop$Instructors.Enthusiastic)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Instructors.Enthusiastic" , "were the instructors enthusiastic about the workshop", c(1, 2,4, 3))
+table(Epostworkshop$Workshop.in.US)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Workshop.in.US" , "the workshop was in the US", c(2,1))
+# age and gender are not shown in the PDF questionnaire
+table(Epostworkshop$Age)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Age" , "age") # not very necesary as given in the presurvey
+table(Epostworkshop$Gender)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Gender" , "gender")
+table(Epostworkshop$Race.White) # given that is the majority
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Race.White" , "white")
