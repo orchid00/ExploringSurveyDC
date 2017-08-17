@@ -297,7 +297,7 @@ table(Epreworkshop$Gender, Epreworkshop$With.Friend)
 
 #############################################
 plotByGenderGeneric <- function(df, ti, colna, colstr){
-  #StartbyFiltering Gender Not Answer or not provided
+  #StartbyFiltering Gender Not Answered or not provided
   print(dim(df))
   x <- subset(df, df$Gender == "Male" | df$Gender == "Female") 
   x <- droplevels(x)
@@ -351,5 +351,57 @@ plotByGenderGeneric(Epreworkshop, "Pre-survey", "Workshop.in.US" , "workshop tak
 # 0    0                 0       446
 # No       0    0                 0       590
 # Yes    717  540                22        28
+
+
+#############################################
+plotByStatusGeneric <- function(df, ti, colna, colstr){
+  #StartbyFiltering colna Not Answered
+  print(dim(df))
+  print(colna)
+  y <- droplevels(subset(df, df[[colna]] != ""))
+  print(dim(y))
+  print(table(y[[colna]]))
+  #####Plot Function Generic
+  ps <- ggplot(data = y, aes( x = Status, fill= Status)) +
+    #coord_flip() +
+    geom_bar(aes(y = (..count..)/sum(..count..))) +
+    scale_fill_manual(values = cbPalette) +
+    theme_light() +
+    labs(x = "Status", y = paste("Total respondents", dim(y)[1], "in percentage ")) +
+    ggtitle(paste(ti, "responses by status and", colstr)) +
+    scale_y_continuous(labels = scales::percent) +
+    theme(plot.title = element_text(hjust = 0.5)) +
+    theme(axis.text.x=element_blank(),
+          axis.ticks.x=element_blank(),
+          legend.position="bottom",
+          legend.title = element_blank())+
+    facet_grid(reformulate(colna), ".") # . ~ colna
+  print(ps)
+  ggsave(filename =  paste("./plots/Statusvs", gsub("\\s", "",colstr),
+                           "-",ti,".png", sep = ""),
+         width = 12, height = 6, dpi = 120)
+}
+
+#plotByStatusGeneric(df, ti, colna, colstr)
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Gender" , "gender")
+#not very useful as gender is only asked in the US
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "With.Friend" , "attended with a friend")
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Discipline" , "discipline")
+# too many variables
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "OS" , "operative system")
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Programming.Usage" , "programming usage")
+
+### I'm not sure why there is 7 columns for current tools "Current.Tools.1" to "Current.Tools.7"
+
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Have.Dataset" , "have dataset")
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Data.Organization" , "importance of data organization")
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Using.Scripting.Language" , "importance of using scripting language")
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Using.R.or.Python" , "importance of using R or Python")
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Value.of.SQL.or.Python" , "importance of using SQL or Python")
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "First.Time" , "first time taking a DC as learner")
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Workshop.in.US" , "workshop taken in the US")
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Age" , "age")
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Race" , "race")
+
 
 
