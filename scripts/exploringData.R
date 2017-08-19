@@ -4,7 +4,7 @@
 # Date: 2017, August 09
 # Version 0.1
 # Analyzing pre and post survey results from Data Carpentry
-# Repo: https://github.com/carpentries/assessment-projects
+# Repo: https://github.com/carpentries/assessment-projects/tree/master/data-carpentry-projects
 
 
 #####################################
