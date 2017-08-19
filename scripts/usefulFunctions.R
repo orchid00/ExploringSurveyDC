@@ -18,6 +18,7 @@ empty_as_na <- function(x){
 reorderLevels <- function(x, vec){
   x <- factor(x,levels(x)[vector])
   print(levels(x))
+  return(x)
 }
 
 ############################################################################
@@ -67,4 +68,4 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
     }
   }
 }
-############################################################################
+
