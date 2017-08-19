@@ -1,24 +1,32 @@
 
+# Dowloaded file from repo https://github.com/carpentries/assessment-projects/blob/master/joint-carpentry-projects/data.csv
 
-datasmall <- read.csv(file = "~/paula/DataSoftwareCarpentry/Survey/Data/data.csv")
-str(datasmall)
+datasmall <- read.csv(file = "data/data.csv")
+#str(datasmall)
+dim(datasmall)
 View(datasmall)
-
 
 plot(datasmall$Country, las = 2 )
 
+# clean NA
+levels(datasmall$Country)
+levels(datasmall$Country)[1] <- "No Answer"
+levels(datasmall$Country)
+datasmall$Country <- factor(datasmall$Country, levels = rev(levels(datasmall$Country)))
+levels(datasmall$Country)
 # ggplot2
 
 # install.packages("ggplot2")
-# library("ggplot2")
+library("ggplot2")
 
 ##################################################################v  
 # Option 1
 
-# install.packages("extrafont")
-# library(extrafont)
-# font_import(pattern="[C/c]omic")
-# loadfonts(device="win")
+install.packages("extrafont")
+library(extrafont)
+font_import(pattern="[C/c]omic") # y
+loadfonts(device="win")
+
 
 
 ggplot(data = datasmall, aes( x = Country )) +
