@@ -9,7 +9,7 @@
 # To run the analysis some packages need to be previously installed.
 # Check installed packages before installing new packages.
 list.of.packages <- c("knitr", "tidyr", "tidyverse", "ggplot2", "dplyr",
-                      "readr","purrr", "tible", "DBI", "ggmap", "likert",
+                      "readr","purrr", "DBI", "ggmap", "likert",
                       "mapproj", "RColorBrewer", "forcats")
 
 
