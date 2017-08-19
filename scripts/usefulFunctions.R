@@ -1,4 +1,12 @@
-# useful functions
+#
+#   Description: Setting up useful functions before running analysis
+#                Run this script after installing required packages
+#   Date: 2017, August 15
+#   Copyright (C) 2017 Paula Andrea Martinez
+#
+
+
+# To run the analysis some useful functions are needed.
 ############################################################################
 ## define a helper function to change NAs from factor to character
 empty_as_na <- function(x){
