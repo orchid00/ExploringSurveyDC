@@ -287,6 +287,9 @@ plotGeneric <- function(df, ti, colna, colstr, reorderingvec = NULL, ext,reorder
   ps <- ps +  annotate(geom = "text", label = paste0(perc, "%"), size = 4, 
                        x = 4.5, y = dim(y)[1]/6000, fontface="bold",
                        colour = "#888888", family="Tahoma")
+  ggsave(filename =  paste("./plots/", ti, "_",ext, "_", gsub("\\.", "",colna),
+                            ".png", sep = ""),
+        width = 15, height = 8, dpi = 200)
   print(ps)
 }
 # ###########################################################################
