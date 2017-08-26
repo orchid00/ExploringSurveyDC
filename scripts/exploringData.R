@@ -1,7 +1,7 @@
 #! /usr/bin/env Rscript
 
 #
-#   Description: report ploting functions
+#   Description: report plotting functions
 #   Analyzing pre and post survey results from Data Carpentry 
 #   Repo: https://github.com/carpentries/assessment-projects/tree/master/data-carpentry-projects
 #   Date: 2017, August 09 - 26

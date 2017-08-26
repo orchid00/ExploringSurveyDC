@@ -1,3 +1,5 @@
+#! /usr/bin/env Rscript
+
 #
 #   Description: Setting up the environment before running analysis
 #                Run this script first
