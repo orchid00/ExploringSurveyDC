@@ -173,6 +173,55 @@ plotByStatusGeneric <- function(df, ti, colna, colstr, reorderingvec = NULL){
                             ".png", sep = ""),
         width = 15, height = 8, dpi = 200)
 }
+
+library(ggplot2)
+library(scales)
+library(extrafont)
+font_import(pattern="[T/t]ahoma")
+loadfonts(device="win")
+#######
+
+plotmin_ByStatusGeneric <- function(df, ti, colna, colstr, reorderingvec = NULL){
+  #StartbyFiltering colna Not Answered
+  print(dim(df))
+  print(colna)
+  y <- droplevels(subset(df, df[[colna]] != ""))
+  print(dim(y))
+  print(table(y[[colna]]))
+  if(!is.null(reorderingvec)){
+    y[[colna]] <- reorderLevels(y[[colna]], reorderingvec)
+  }
+  #####Plot Function Generic
+  ps <- ggplot(data = y, aes( x = Status, fill= Status)) +
+    #coord_flip() +
+    geom_bar(aes(y = (..count..)/sum(..count..))) +
+    scale_fill_manual(values = cbPalette) +
+    theme_light() + 
+    labs(x = "Status", y = paste("Total respondents", dim(y)[1], "in percentage ")) +
+    ggtitle(paste(ti, "responses by status and", colstr)) +
+    scale_y_continuous( labels = percent_format(), breaks = seq(0.05,0.30,0.05))+
+    theme(panel.grid.major =  element_blank(),
+          plot.title   = element_text(hjust = 0.5),
+          axis.text.x  = element_blank(),
+          axis.ticks.x = element_blank(),
+          legend.position = "bottom",
+          legend.title    = element_blank(),
+          strip.background = element_rect(fill =  "#888888"),
+          strip.placement = "outside",
+          strip.switch.pad.grid = unit(0.1, "cm"),
+          text=element_text(family="Tahoma", size=12)                
+          )+
+    facet_grid(reformulate(colna), ".") # . ~ colna
+  print(ps)
+
+}
+plotmin_ByStatusGeneric(Epreworkshop, "Pre-survey", "Age" , "age")
+plotmin_ByStatusGeneric(Epreworkshop, "Pre-survey", "Discipline" , "discipline", c(2,10, 11,4,8,5,7,6, 9, 12,3, 14, 15, 16, 17,18, 13,1))
+plotmin_ByStatusGeneric(Epreworkshop, "Pre-survey", "OS" , "operative system", c(1,2,4,3))
+
+
+
+
 ############################################################################
 # Calling the function # plotByStatusGeneric(df, ti, colna, colstr, order)
 table(Epreworkshop$year.survey)
@@ -218,7 +267,7 @@ dim(EpreworkshopUS)
 
 plotByStatusGeneric(EpreworkshopUS, "Pre-surveyUS", "Age" , "age")
 plotByStatusGeneric(EpreworkshopUS, "Pre-surveyUS", "Gender" , "gender")
-plotByStatusGeneric(EpreworkshopUS, "Pre-surveyUS", "Race" , "race")
+plotmin_ByStatusGeneric(EpreworkshopUS, "Pre-surveyUS", "Race" , "race")
 
 ############################################################################
 # Post- survey data
