@@ -4,11 +4,10 @@
 #   Description: report ploting functions
 #   Analyzing pre and post survey results from Data Carpentry 
 #   Repo: https://github.com/carpentries/assessment-projects/tree/master/data-carpentry-projects
-#   Date: 2017, August 09 - 19
+#   Date: 2017, August 09 - 26
 #   Copyright (C) 2017 Paula Andrea Martinez
 #
 source(file = "scripts/installpkg.R")
-source(file = "scripts/usefulFunctions.R")
 
 #####################################
 # download files
@@ -22,17 +21,16 @@ source(file = "scripts/usefulFunctions.R")
 
 
 ############################################################################
-#Set Colour Palette
+# Set blind-friendly colour Palette
+# http://www.cookbook-r.com/Graphs/Colors_%28ggplot2%29/
 # The palette with grey:
 cbPalette <- c("#56B4E9", "#009E73", "#F0E442", "#0072B2", "#999999","#E69F00", "#D55E00", "#CC79A7", "#90EE90")
-# The palette with black:
-cbbPalette <- c("#56B4E9", "#009E73", "#F0E442", "#0072B2","#000000", "#E69F00", "#D55E00", "#CC79A7", "#90EE90")
 # To use for fills, add
 scale_fill_manual(values = cbPalette)
 # To use for line and point colors, add
 scale_colour_manual(values = cbPalette)
 
-# ###############################################################################
+# ###########################################################################
 # Exploring the dataset
 Exploring <- function(filecsv){
     ps <- read.csv(filecsv)
@@ -43,15 +41,68 @@ Exploring <- function(filecsv){
 
     return(ps)
 }
-######################################
+# ###########################################################################
 # Reordering levels of a factor
 reorderLevels <- function(x, vec){
   x <- factor(x,levels(x)[vec])
   print(levels(x))
   return(x)
 }
-######################################
-#Cleaning Epreworkshop
+# ###########################################################################
+# Define a helper function to change NAs from factor to character
+empty_as_na <- function(x){
+  if("factor" %in% class(x)) x <- as.character(x) ## since ifelse wont work with factors
+  ifelse(as.character(x)!="", x, "No answer")
+}
+# ###########################################################################
+# http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_%28ggplot2%29/
+# Multiple plot function
+#
+# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
+# - cols:   Number of columns in layout
+# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
+#
+# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
+# then plot 1 will go in the upper left, 2 will go in the upper right, and
+# 3 will go all the way across the bottom.
+#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+  
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+  
+  numPlots = length(plots)
+  
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                     ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+  
+  if (numPlots==1) {
+    print(plots[[1]])
+    
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+    
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+      
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+# ###########################################################################
+# Cleaning Epreworkshop
 cleanPreworkshopdata <- function(df){
   print(colnames(df))
   # "Start.Date" # munging to year.survey
@@ -96,11 +147,13 @@ cleanPreworkshopdata <- function(df){
   levels(df$Race)[1] <- "No Answer"
   levels(df$Race)[7] <- "Other"
   df$Race <- reorderLevels(df$Race, c(2,3,4,5,6,9,8,7,1))
+  print(paste("Data contains", 
+              dim(df)[1], "rows and", 
+              dim(df)[2], "columns")) 
   return(df)
-
 }
-######################################
-#Cleaning Epostworkshop
+# ###########################################################################
+# Cleaning Epostworkshop
 cleanPostworkshopdata <- function(df){
   # # Postworkshop Status has one extra level "Response" only in row 1, now removed 
   df <- df[-c(1), ]
@@ -126,23 +179,25 @@ cleanPostworkshopdata <- function(df){
   df$Status <- reorderLevels(df$Status, c(8,3,6,2,7,4,5,1))
   levels(df$Gender)[1] <- "No Answer"
   df$Gender <- reorderLevels(df$Gender, c(2,3,4,1))
+  # capitalize levels
+  levels(df$Workshop.in.US)[2] <- "No"
+  levels(df$Workshop.in.US)[3] <- "Yes"
+  print(paste("Data contains", 
+              dim(df)[1], "rows and", 
+              dim(df)[2], "columns")) 
   return(df)
   
 }
-
-# # files sent by email have more colums
-Epreworkshop <- Exploring("./data/preworkshop-public-archived.csv")
-Epreworkshop <- cleanPreworkshopdata(Epreworkshop)
-
-Epostworkshop <- Exploring("./data/postworkshop-public-archived.csv")
-Epostworkshop <- cleanPostworkshopdata(Epostworkshop)
-
-
-
-############################################################################
-########## plotting ##############
+# ###########################################################################
+# ######### plotting ##############
+# load all necesary packages
 library("ggplot2")
-############################################################################
+library("scales")
+library("extrafont")
+font_import(pattern="[T/t]ahoma", prompt = FALSE)
+loadfonts()
+# ###########################################################################
+# Make barplots by Status 
 plotByStatusGeneric <- function(df, ti, colna, colstr, reorderingvec = NULL){
   #StartbyFiltering colna Not Answered
   print(dim(df))
@@ -153,54 +208,71 @@ plotByStatusGeneric <- function(df, ti, colna, colstr, reorderingvec = NULL){
   if(!is.null(reorderingvec)){
     y[[colna]] <- reorderLevels(y[[colna]], reorderingvec)
   }
-  #####Plot Function Generic
-  ps <- ggplot(data = y, aes( x = Status, fill= Status)) +
-    #coord_flip() +
-    geom_bar(aes(y = (..count..)/sum(..count..))) +
-    scale_fill_manual(values = cbPalette) +
-    theme_light() +
-    labs(x = "Status", y = paste("Total respondents", dim(y)[1], "in percentage ")) +
-    ggtitle(paste(ti, "responses by status and", colstr)) +
-    scale_y_continuous(labels = scales::percent) +
-    theme(plot.title = element_text(hjust = 0.5)) +
-    theme(axis.text.x=element_blank(),
-          axis.ticks.x=element_blank(),
-          legend.position="bottom",
-          legend.title = element_blank())+
-    facet_grid(reformulate(colna), ".") # . ~ colna
-  print(ps)
-  ggsave(filename =  paste("./plots/", ti, "_","Status_", gsub("\\.", "",colna),
-                            ".png", sep = ""),
-        width = 15, height = 8, dpi = 200)
-}
-
-library(ggplot2)
-library(scales)
-library(extrafont)
-font_import(pattern="[T/t]ahoma")
-loadfonts(device="win")
-#######
-
-plotmin_ByStatusGeneric <- function(df, ti, colna, colstr, reorderingvec = NULL){
-  #StartbyFiltering colna Not Answered
-  print(dim(df))
-  print(colna)
-  y <- droplevels(subset(df, df[[colna]] != ""))
-  print(dim(y))
-  print(table(y[[colna]]))
-  if(!is.null(reorderingvec)){
-    y[[colna]] <- reorderLevels(y[[colna]], reorderingvec)
+  numoffacets <- length((table(y[[colna]])))
+  perc <- c()
+  for (f in 1:numoffacets){
+    perc[f] <- round((table(y[[colna]])[f] * 100 / dim(y)[1]), digits = 2)
   }
   #####Plot Function Generic
   ps <- ggplot(data = y, aes( x = Status, fill= Status)) +
     #coord_flip() +
     geom_bar(aes(y = (..count..)/sum(..count..))) +
     scale_fill_manual(values = cbPalette) +
-    theme_light() + 
-    labs(x = "Status", y = paste("Total respondents", dim(y)[1], "in percentage ")) +
+    theme_light() +
+    labs(x = "Status", y = paste("Total respondents", dim(y)[1], "shown in percentages")) +
     ggtitle(paste(ti, "responses by status and", colstr)) +
-    scale_y_continuous( labels = percent_format(), breaks = seq(0.05,0.30,0.05))+
-    theme(panel.grid.major =  element_blank(),
+    scale_y_continuous(labels = scales::percent) +
+    theme(plot.title = element_text(hjust = 0.5)) +
+    theme(panel.grid.major.x = element_blank(),
+          axis.text.x=element_blank(),
+          axis.ticks.x=element_blank(),
+          legend.position="bottom",
+          legend.title = element_blank(),
+          strip.background = element_rect(fill =  "#888888"),
+          strip.placement = "outside",
+          strip.switch.pad.grid = unit(0.1, "cm"),
+          text = element_text(family="Tahoma", size=12))+
+    facet_grid(reformulate(colna), ".") # . ~ colna
+  ps <- ps +  annotate(geom = "text", label = paste0(perc, "%"), size = 4, 
+                       x = 4.5, y = dim(y)[1]/6000, fontface="bold",
+                       colour = "#888888", family="Tahoma")
+  print(ps)
+  # ggsave(filename =  paste("./plots/", ti, "_","Status_", gsub("\\.", "",colna),
+  #                           ".png", sep = ""),
+  #       width = 15, height = 8, dpi = 200)
+}
+# ###########################################################################
+# A try to make a generic plot
+plotGeneric <- function(df, ti, colna, colstr, reorderingvec = NULL, ext,reorderingvec2 = NULL ){
+  #StartbyFiltering colna Not Answered
+  print(dim(df))
+  print(colna)
+  print(ext)
+  y <- droplevels(subset(df, df[[colna]] != ""))
+  y <- droplevels(subset(y, y[[ext]] != ""))
+  print(dim(y))
+  if(!is.null(reorderingvec)){
+    y[[colna]] <- reorderLevels(y[[colna]], reorderingvec)
+  }
+  if(!is.null(reorderingvec2)){
+    y[[ext]] <- reorderLevels(y[[ext]], reorderingvec2)
+  }
+  print(table(y[[colna]],y[[ext]]))
+  numoffacets <- length((table(y[[colna]],y[[ext]])))
+  perc <- c()
+  for (f in 1:numoffacets){
+    perc[f] <- round((table(y[[colna]],y[[ext]])[f] * 100 / dim(y)[1]), digits = 2)
+  }
+  #####Plot Function Generic
+  ps <- ggplot(data = y, aes( x = Status, fill= Status) )+
+    #coord_flip() +
+    geom_bar(aes(y = (..count..)/sum(..count..))) +
+    scale_fill_manual(values = cbPalette) +
+    theme_light() + 
+    labs(x = "Status", y = paste("Total respondents", dim(y)[1], "shown in percentages")) +
+    ggtitle(paste(ti, "responses by status and", colstr)) +
+    scale_y_continuous( labels = percent_format())+
+    theme(panel.grid.major.x =  element_blank(),
           plot.title   = element_text(hjust = 0.5),
           axis.text.x  = element_blank(),
           axis.ticks.x = element_blank(),
@@ -209,155 +281,18 @@ plotmin_ByStatusGeneric <- function(df, ti, colna, colstr, reorderingvec = NULL)
           strip.background = element_rect(fill =  "#888888"),
           strip.placement = "outside",
           strip.switch.pad.grid = unit(0.1, "cm"),
-          text=element_text(family="Tahoma", size=12)                
-          )+
-    facet_grid(reformulate(colna), ".") # . ~ colna
+          text=element_text(family="Tahoma", size=12))+
+    #facet_grid(reformulate(colna), ".") # . ~ colna
+    facet_grid(eval(reformulate(colna, ext)))
+  ps <- ps +  annotate(geom = "text", label = paste0(perc, "%"), size = 4, 
+                       x = 4.5, y = dim(y)[1]/6000, fontface="bold",
+                       colour = "#888888", family="Tahoma")
   print(ps)
-
 }
-plotmin_ByStatusGeneric(Epreworkshop, "Pre-survey", "Age" , "age")
-plotmin_ByStatusGeneric(Epreworkshop, "Pre-survey", "Discipline" , "discipline", c(2,10, 11,4,8,5,7,6, 9, 12,3, 14, 15, 16, 17,18, 13,1))
-plotmin_ByStatusGeneric(Epreworkshop, "Pre-survey", "OS" , "operative system", c(1,2,4,3))
-
-
-
-
-############################################################################
-# Calling the function # plotByStatusGeneric(df, ti, colna, colstr, order)
-table(Epreworkshop$year.survey)
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "year.survey" , "year of survey response")
-table(Epreworkshop$First.Time)
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "First.Time" , "first time taking a DC as learner", c(2,3,1))
-table(Epreworkshop$Discipline) # too many variables to plot by Biology and Genetics is the discipline with the majority of answers
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "Discipline" , "discipline", c(2,10, 11,4,8,5,7,6, 9, 12,3, 14, 15, 16, 17,18, 13,1))
-table(Epreworkshop$OS)
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "OS" , "operative system", c(1,2,4,3))
-table(Epreworkshop$With.Friend)
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "With.Friend" , "attended with a friend", c(1,2,3))
-table(Epreworkshop$Programming.Usage)
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "Programming.Usage" , "programming usage", c(2, 3, 6, 4, 7, 1, 5))
-### skipping current tools "Current.Tools.1" to "Current.Tools.7"
-table(Epreworkshop$Have.Dataset)
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "Have.Dataset" , "have dataset", c(2,1,4,3))
-
-## "Data.Management.Strategy" "Data.Analysis.Workflow" are better plotted with a Likert plot 
-table(Epreworkshop$Data.Management.Strategy)
-table(Epreworkshop$Data.Analysis.Workflow)
-
-table(Epreworkshop$Data.Organization)
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "Data.Organization" , "importance of data organization", c(5,2,3,1,4))
-table(Epreworkshop$Using.Scripting.Language)
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "Using.Scripting.Language" , "importance of using scripting language",  c(5,2,3,1,4))
-
-### Skipped because question is not clear
-table(Epreworkshop$Using.R.or.Python)
-table(Epreworkshop$Value.of.SQL.or.Python)
-
-table(Epreworkshop$Workshop.in.US)
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "Workshop.in.US" , "workshop taken in the US")
-
-table(Epreworkshop$Age)
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "Age" , "age")
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "Gender" , "gender")
-table(Epreworkshop$Race)
-plotByStatusGeneric(Epreworkshop, "Pre-survey", "Race" , "race")
-### I will suggest to do the next plots with a subset of US 
-EpreworkshopUS <- subset(Epreworkshop, Workshop.in.US == "Yes")
-dim(EpreworkshopUS)
-
-plotByStatusGeneric(EpreworkshopUS, "Pre-surveyUS", "Age" , "age")
-plotByStatusGeneric(EpreworkshopUS, "Pre-surveyUS", "Gender" , "gender")
-plotmin_ByStatusGeneric(EpreworkshopUS, "Pre-surveyUS", "Race" , "race")
-
-############################################################################
-# Post- survey data
-table(Epostworkshop$year.survey)
-plotByStatusGeneric(Epostworkshop, "Post-survey", "year.survey" , "year of survey response")
-# there is not much to do with columns that are repeated with the pre-survey
-#  "When.Taking.Survey"        "First.Time"
-# "Research" is a text field wich is difficult to categorize
-table(Epostworkshop$Involvement)
-plotByStatusGeneric(Epostworkshop, "Post-survey", "Involvement" , "level of involvement", c(2,3,1))
-table(Epostworkshop$Practical.Knowledge)
-plotByStatusGeneric(Epostworkshop, "Post-survey", "Practical.Knowledge" , "practical knowledge gained", c(2, 3, 1))
-
-#####The folowwing will be better with a Likert plot
-# "Organize.Data"             "Use.OpenRefine"            "Import.Python"            
-# [13] "Import.R"                  "Visualizations.in.Python"  "Visualizations.in.R"       "Construct.SQL"            
-# [17] "Use.command.line" 
-
-# For information of each question
-table(Epostworkshop$Organize.Data)
-plotByStatusGeneric(Epostworkshop, "Post-survey", "Organize.Data" , "better understanding on how to organize data in spreadsheets", c(6,2,4,1,5,3)) 
-# has a weird extra category Effectively organize data in spreadsheets
-table(Epostworkshop$Use.OpenRefine)
-plotByStatusGeneric(Epostworkshop, "Post-survey", "Use.OpenRefine" , "better understanding on how to use OpenRefine for data cleaning", c(6,2,4,1,5,3)) 
-# has a weird extra category Use OpenRefine for data cleaning
-table(Epostworkshop$Import.Python)
-plotByStatusGeneric(Epostworkshop, "Post-survey", "Import.Python" , "better understanding on how to import a file in Python and work with the data",  c(6,2,4,1,5,3)) 
-table(Epostworkshop$Import.R)
-plotByStatusGeneric(Epostworkshop, "Post-survey", "Import.R" , "better understanding on how to import a file in R and work with the data",  c(6,2,4,1,5,3)) 
-table(Epostworkshop$Visualizations.in.Python)
-plotByStatusGeneric(Epostworkshop, "Post-survey", "Visualizations.in.Python" , "better understanding on how to do visualizations in Python",  c(6,2,4,1,5,3)) 
-table(Epostworkshop$Visualizations.in.R)
-plotByStatusGeneric(Epostworkshop, "Post-survey", "Visualizations.in.R" , "better understanding on how to do visualizations in R",  c(6,2,4,1,5,3)) 
-table(Epostworkshop$Construct.SQL)
-plotByStatusGeneric(Epostworkshop, "Post-survey", "Construct.SQL" , "better understanding on how to construct SQL queries",  c(6,2,4,1,5,3)) 
-table(Epostworkshop$Use.command.line)
-plotByStatusGeneric(Epostworkshop, "Post-survey", "Use.command.line" , "better understanding on how to use command line",  c(6,2,4,1,5,3)) 
-
-
-table(Epostworkshop$Skill.Level.Prior)
-plotByStatusGeneric(Epostworkshop, "Post-survey", "Skill.Level.Prior" , "data management and analysis skills prior the workshop", c(5, 2, 3, 1, 4))
-table(Epostworkshop$Skill.Level.Following)
-plotByStatusGeneric(Epostworkshop, "Post-survey", "Skill.Level.Following" , "data management and analysis skills following the workshop", c(1, 4, 2, 3))
-table(Epostworkshop$Application)
-plotByStatusGeneric(Epostworkshop, "Post-survey", "Application" , "can immediately applied what was learned at the workshop", c(5,2,3,1,4))
-table(Epostworkshop$Worth.My.Time)
-plotByStatusGeneric(Epostworkshop, "Post-survey", "Worth.My.Time" , "the workshop was worth my time", c(5,2,3,1,4))
- 
-table(Epostworkshop$Material)
-plotByStatusGeneric(Epostworkshop, "Post-survey", "Material" , "the material matched the workshop description", c(5,2,3,1,4))
-table(Epostworkshop$Recommend)
-plotByStatusGeneric(Epostworkshop, "Post-survey", "Recommend" , "would recommend this workshop", c(5,2,3,1,4))
-table(Epostworkshop$Instructors.Effective)
-plotByStatusGeneric(Epostworkshop, "Post-survey", "Instructors.Effective" , "were the instructors effective in teaching the workshop?", c(3, 4,5,2, 1))
-table(Epostworkshop$Instructors.Enthusiastic)
-plotByStatusGeneric(Epostworkshop, "Post-survey", "Instructors.Enthusiastic" , "were the instructors enthusiastic about the workshop?", c(3,4,2,1))
-
-
-table(Epostworkshop$Workshop.in.US) # should be No and Yes but it is all small letters
-plotByStatusGeneric(Epostworkshop, "Post-survey", "Workshop.in.US" , "the workshop was in the US")
-# age and gender are not shown in the PDF questionnaire
-# not very necesary as given in the presurvey
-table(Epostworkshop$Age)
-plotByStatusGeneric(Epostworkshop, "Post-survey", "Age" , "age") 
-table(Epostworkshop$Gender)
-plotByStatusGeneric(Epostworkshop, "Post-survey", "Gender" , "gender") # needs subsetting
-table(Epostworkshop$Race.White) # given that is the majority
-plotByStatusGeneric(Epostworkshop, "Post-survey", "Race.White" , "white")
-
-###New Combinations
-# wort my time vs With a friend
-# involvement vs with a friend
-#Recomended vs worth my time
-# recomended vs material
-# material vs worth my time
-
-table(Epreworkshop$Status, Epreworkshop$With.Friend)
-
-
-
-
-
-
-
-
-
-
-
+# ###########################################################################
+# Plots for Gender, Race and Age should be only from US respondents
+# ###########################################################################
 # Plots by Gender should be only taken for answers within US 
-
 plotByGender <- function(df, ti, reorderingvec=NULL){
   if(!is.null(reorderingvec)){
       df[["Gender"]] <- reorderLevels(df[["Gender"]], reorderingvec)
@@ -367,9 +302,9 @@ plotByGender <- function(df, ti, reorderingvec=NULL){
     geom_bar(aes(y = (..count..)/sum(..count..)) ) +
     scale_fill_manual(values = cbPalette) +
     theme_light() +
-    labs(x = "Gender", y = paste("Total respondents", dim(df)[1], "in percentage ")) +
+    labs(x = "Gender", y = paste("Total respondents", dim(df)[1], "shown in percentages")) +
     ggtitle(paste(ti, "responses by gender") ) +
-    scale_y_continuous(labels = scales::percent) +
+    scale_y_continuous(labels = scales::percent, limits = c(0, 0.7)) +
     theme(plot.title = element_text(hjust = 0.5)) +
     theme(axis.text.x=element_blank(),
           axis.ticks.x=element_blank(),
@@ -377,18 +312,14 @@ plotByGender <- function(df, ti, reorderingvec=NULL){
           legend.title = element_blank())
   #print(ps)
 }
-
-multiplot(plotByGender(Epreworkshop, "Pre- survey"),
-          plotByGender(Epostworkshop, "Post- survey"), cols=2)
-
-
-###########################################################################
+# ###########################################################################
+# Plot by Gender and Status
 plotByGenderStatus <- function(df, ti){
   ps <- ggplot(data = df, aes( x = Gender, fill= Gender)) +
     geom_bar(aes(y = (..count..)/sum(..count..))) +
     scale_fill_manual(values = cbPalette) +
     theme_light() +
-    labs(x = "Gender", y = paste("Total respondents", dim(df)[1], "in percentage ")) +
+    labs(x = "Gender", y = paste("Total respondents", dim(df)[1], "shown in percentages")) +
     ggtitle(paste(ti, "responses by gender and status")) +
     scale_y_continuous(labels = scales::percent) +
     theme(plot.title = element_text(hjust = 0.5)) +
@@ -401,13 +332,8 @@ plotByGenderStatus <- function(df, ti){
   #ggsave(filename =  paste("./plots/GendervsStatus-",ti,".png", sep = ""),
   #       width = 12, height = 6, dpi = 120)
 }
-
-plotByGenderStatus(Epreworkshop, "Pre-survey")
-plotByGenderStatus(Epostworkshop, "Post-survey")
-# 
-###########################################################################
-# # #excluding "Prefer not to say and No answer from Gender and Status"
-# # 
+# ###########################################################################
+# Excluding "Prefer not to say and No answer from Gender and Status"
 ExcludeNANotGiven <- function(df){
   newpredf <- data.frame(Gender = factor(df$Gender),
                   Status = factor(df$Status))
@@ -423,100 +349,186 @@ ExcludeNANotGiven <- function(df){
   print(dim(y))
   return(y)
 }
+# ###########################################################################
+
+# ###########################################################################
+# Calls 
+# ###########################################################################
+## ---- exploring-presurvey-data ----
+Epreworkshop <- Exploring("./data/preworkshop-public-archived.csv")
+Epreworkshop <- cleanPreworkshopdata(Epreworkshop)
+## ---- plotting-presurvey-data ----
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "year.survey" , "year of survey response")
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "First.Time" , "first time taking a DC as learner", c(2,1))
+# table(Epreworkshop$Discipline) # too many variables to plot by Biology and Genetics is the discipline with the majority of answers
+# plotByStatusGeneric(Epreworkshop, "Pre-survey", "Discipline" , "discipline", c(2,10, 11,4,8,5,7,6, 9, 12,3, 14, 15, 16, 17,18, 13,1))
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "OS" , "operative system", c(1,2,4,3))
+# table(Epreworkshop$With.Friend)
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "With.Friend" , "attended with a friend", c(3,1,2))
+# table(Epreworkshop$Programming.Usage)
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Programming.Usage" , "programming usage", c(2, 3, 6, 4, 7, 1, 5))
+# Skipping current tools "Current.Tools.1" to "Current.Tools.7"
+# table(Epreworkshop$Have.Dataset)
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Have.Dataset" , "having a dataset", c(2,1,4,3))
+# "Data.Management.Strategy" "Data.Analysis.Workflow" are better plotted with a Likert plot 
+# table(Epreworkshop$Data.Management.Strategy)
+# table(Epreworkshop$Data.Analysis.Workflow)
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Data.Organization" , "importance of data organization", c(4,1,3,2,5))
+# table(Epreworkshop$Using.Scripting.Language)
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Using.Scripting.Language" , "importance of using a scripting language",  c(4,1,3,2,5))
+# ### Skipped because question is not clear
+# table(Epreworkshop$Using.R.or.Python)
+# table(Epreworkshop$Value.of.SQL.or.Python)
+# Taken in the US
+# table(Epreworkshop$Workshop.in.US)
+# 31% No 69% Yes
+#(590 * 100) / 1890  
+# ### [1] 31.21693
+#(1307 * 100) / 1890  
+# ###[1] 69.15344
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Workshop.in.US" , "workshop taken in the US")
+# make workshop in the US per year
+plotGeneric(Epreworkshop, "Pre-survey", "Workshop.in.US" , "workshop taken in the US per year", c(2,1), "year.survey" )
+# this is very interesting, shows that for 2017 only 10% of respondents have taken the survey outside of the US
+plotByStatusGeneric(Epreworkshop, "Pre-survey", "Age" , "age")
+plotGeneric(Epreworkshop, "Pre-survey", "Age" , "age per year",NULL, "year.survey")
+# doesn't really mean that more people in the US came with a friend, it just looks like that because more people
+# have taken the survey in the US
+plotGeneric(Epreworkshop, "Pre-survey","With.Friend" , "came with friend vs taken in the US", c(3,1,2), 
+            "Workshop.in.US" , c(2,1)) 
+plotGeneric(Epreworkshop, "Pre-survey", "OS", "OS vs taken in the US", c(1,2,4,3), "Workshop.in.US" , c(2,1)) 
+plotGeneric(Epreworkshop, "Pre-survey", "OS", "OS vs year of the survey", c(1,2,4,3), "year.survey" ) 
+## ---- plotting-presurvey-dataUS ----
+# Filter all of those who did not take the survey in the US 
+EpreworkshopUS <- subset(Epreworkshop, Workshop.in.US == "Yes")
+dim(EpreworkshopUS)
+plotByStatusGeneric(EpreworkshopUS, "Pre-surveyUS", "Age" , "age")
+# Gender... this is not a reality, it only means that more women responded in the survey
+# not that there were more women have taken the workshop
+plotByStatusGeneric(EpreworkshopUS, "Pre-surveyUS", "Gender" , "gender")
+# Combined plot
+plotGeneric(EpreworkshopUS, "Pre-surveyUS","With.Friend" , "came with friend vs gender", c(3,1,2), 
+            "Gender" ) 
+# Names are too long to be shown in categories 
+plotByStatusGeneric(EpreworkshopUS, "Pre-surveyUS", "Race" , "race")
+# ############################################################################
+## ---- exploring-postsurvey-data ----
+Epostworkshop <- Exploring("./data/postworkshop-public-archived.csv")
+Epostworkshop <- cleanPostworkshopdata(Epostworkshop)
+# Postworkshop has about half the entries in comparison with the preworkshop 
+## ---- plotting-postsurvey-data ----
+# 2017 has of course less entries because it contains only answers of half a year
+plotByStatusGeneric(Epostworkshop, "Post-survey", "year.survey" , "year of survey response")
+# there is not much to do with columns that are repeated with the pre-survey
+# #  "When.Taking.Survey"        "First.Time"
+# # "Research" is a text field wich is difficult to categorize
+# table(Epostworkshop$Involvement)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Involvement" , "level of involvement", c(3,1,2))
+# table(Epostworkshop$Practical.Knowledge)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Practical.Knowledge" , "practical knowledge gained", c(1, 3, 2))
+plotGeneric(Epostworkshop, "Post-survey", "Practical.Knowledge" , 
+            "practical knowledge gained vs level of involvement", c(1, 3, 2),"Involvement", c(3,1,2)) 
+# #####The folowwing will be better with a Likert plot
+# # "Organize.Data"             "Use.OpenRefine"            "Import.Python"            
+# # [13] "Import.R"                  "Visualizations.in.Python"  "Visualizations.in.R"       "Construct.SQL"            
+# # [17] "Use.command.line" 
+# # For information of each question
+# table(Epostworkshop$Organize.Data)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Organize.Data" , "better understanding on how to organize data in spreadsheets", c(5,1,4,2,6,3)) 
+# table(Epostworkshop$Use.OpenRefine)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Use.OpenRefine" , "better understanding on how to use OpenRefine for data cleaning", c(5,1,4,2,6,3)) 
+# table(Epostworkshop$Import.Python)
+# it seems like half of the workshops did not cover python 
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Import.Python" , "better understanding on how to import a file in Python and work with the data",  c(5,1,4,2,6,3)) 
+# table(Epostworkshop$Visualizations.in.Python)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Visualizations.in.Python" , "better understanding on how to do visualizations in Python",  c(5,1,4,2,6,3)) 
+# table(Epostworkshop$Import.R)
+# It seems like almost half (40%) of the workshops covered R
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Import.R" , "better understanding on how to import a file in R and work with the data",  c(5,1,4,2,6,3)) 
+# table(Epostworkshop$Visualizations.in.R)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Visualizations.in.R" , "better understanding on how to do visualizations in R",  c(5,1,4,2,6,3)) 
+# table(Epostworkshop$Construct.SQL)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Construct.SQL" , "better understanding on how to construct SQL queries",  c(5,1,4,2,6,3)) 
+# table(Epostworkshop$Use.command.line)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Use.command.line" , "better understanding on how to use command line",  c(5,1,4,2,6,3)) 
+# table(Epostworkshop$Skill.Level.Prior)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Skill.Level.Prior" , "data management and analysis skills prior the workshop", c(4,1,3,2,5))
+# Combined plot
+plotGeneric(Epostworkshop, "Post-survey", "Skill.Level.Prior" , 
+            "skills prior the workshop vs level of involvement", c(4,1,3,2,5),"Involvement", c(3,1,2)) 
+# table(Epostworkshop$Skill.Level.Following)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Skill.Level.Following" , "data management and analysis skills following the workshop", c(3,2,4,1))
+# Combined plot
+plotGeneric(Epostworkshop, "Post-survey", "Skill.Level.Following" , 
+            "skills level following the workshop vs level of involvement",  c(3,2,4,1),"Involvement", c(3,1,2)) 
+# table(Epostworkshop$Application)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Application" , "can immediately applied what was learned at the workshop", c(4,1,3,2,5))
+# Combined plot
+plotGeneric(Epostworkshop, "Post-survey", "Application" , 
+            "can immediately applied what was learned vs level of involvement",  c(4,1,3,2,5),"Involvement", c(3,1,2)) 
+# needs to be a big squared plot
+plotGeneric(Epostworkshop, "Post-survey", "Application" , 
+            "can immediately applied what was learned vs skill level prior the workshop",  c(4,1,3,2,5),"Skill.Level.Prior", c(4,1,3,2,5)) 
+
+# table(Epostworkshop$Worth.My.Time)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Worth.My.Time" , "the workshop was worth my time", c(4,1,3,2,5))
+# Combined plot
+plotGeneric(Epostworkshop, "Post-survey", "Worth.My.Time" , 
+            "the workshop was worth my time vs level of involvement",  c(4,1,3,2,5),"Involvement", c(3,1,2)) 
+# table(Epostworkshop$Material)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Material" , "the material matched the workshop description", c(4,1,3,2,5))
+# table(Epostworkshop$Recommend)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Recommend" , "would recommend the workshop", c(4,1,3,2,5))
+# Combined plot # big square plot
+# great relationship
+plotGeneric(Epostworkshop, "Post-survey", "Worth.My.Time" , 
+            "the workshop was worth my time vs I will recommend this workshop",  c(4,1,3,2,5),"Recommend", c(4,1,3,2,5))
+# Combined plot
+plotGeneric(Epostworkshop, "Post-survey", "Recommend" , 
+            "I will recommend this workshop vs level of involvement",  c(4,1,3,2,5),"Involvement", c(3,1,2)) 
+# Combined plot
+plotGeneric(Epostworkshop, "Post-survey", "Recommend" , 
+            "I will recommend this workshop vs it was worth my time",  c(4,1,3,2,5),"Worth.My.Time", c(4,1,3,2,5))
+# table(Epostworkshop$Instructors.Effective)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Instructors.Effective" , "were the instructors effective in teaching the workshop?", c(1,2,5,4,3))
+# Combined plot
+# great relationship
+plotGeneric(Epostworkshop, "Post-survey", "Instructors.Effective" , 
+            "were the instructors effective in teaching vs I will recommend this workshop",  c(1,2,5,4,3),"Recommend", c(4,1,3,2,5))
+# table(Epostworkshop$Instructors.Enthusiastic)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Instructors.Enthusiastic" , "were the instructors enthusiastic about the workshop?", c(1,2,4,3))
+# Combined plot
+# great relationship
+plotGeneric(Epostworkshop, "Post-survey", "Instructors.Effective" , 
+            "instructors were effective in teaching vs instructors were enthusiastic",  c(1,2,5,4,3),"Instructors.Enthusiastic", c(1,2,4,3))
+## ---- plotting-postsurvey-dataUS ----
+# table(Epostworkshop$Workshop.in.US) 
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Workshop.in.US" , "the workshop was in the US", c(2,1))
+# # age and gender are not shown in the PDF questionnaire
+# # not very necesary as given in the presurvey
+# table(Epostworkshop$Age)
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Age" , "age") 
+# table(Epostworkshop$Race.White) # given that is the majority
+plotByStatusGeneric(Epostworkshop, "Post-survey", "Race.White" , "white")
+# Filter all of those who did not take the survey in the US 
+EpostworkshopUS <- subset(Epostworkshop, Workshop.in.US == "Yes")
+EpostworkshopUS <- droplevels(EpostworkshopUS)
+# table(EpostworkshopUS$Workshop.in.US)
+# table(EpostworkshopUS$Gender)
+plotByStatusGeneric(EpostworkshopUS, "Post-survey", "Gender" , "gender")
+# ############################################################################
+## ---- plotting-pre-postsurvey-dataUS ----
+# not very interesting
+multiplot(plotByGender(EpreworkshopUS, "Pre- survey"),
+          plotByGender(EpostworkshopUS, "Post- survey"), cols=2)
+# Gender and status only US surveys
+plotByGenderStatus(EpreworkshopUS, "Pre-survey")
+plotByGenderStatus(EpostworkshopUS, "Post-survey")
+# filter not answered
 newpreGS <- ExcludeNANotGiven(Epreworkshop)
 newpostGS <- ExcludeNANotGiven(Epostworkshop)
-plotByGenderStatus(newpreGS, "Pre-survey filtered")
-plotByGenderStatus(newpostGS, "Post-survey filtered")
-
+plotByGenderStatus(newpreGS, "Pre-survey-filtered")
+plotByGenderStatus(newpostGS, "Post-survey-filtered")
+# Multiplot
 multiplot(plotByGender(newpreGS, "Pre-survey"),
           plotByGender(newpostGS, "Post-survey"), cols=2)
-
-############################################################################
-plotByRace <- function(df, ti){
-  x <- subset(df, df$Race != "No Answer", drop = T)
-  y <- droplevels(x)
-  ps <- ggplot(data = y, aes( x = Race, fill = Race )) +
-    #coord_flip() +
-    geom_bar(aes(y = (..count..)/sum(..count..)) ) +
-    scale_fill_manual(values = cbPalette) +
-    theme_light() +
-    labs(x = "Race", y = paste("Total respondents", dim(y)[1], "in percentage ")) +
-    ggtitle(paste(ti, "responses by race") ) +
-    scale_y_continuous(labels = scales::percent) +
-    theme(plot.title = element_text(hjust = 0.5)) +
-    theme(axis.text.x=element_blank(),
-          axis.ticks.x=element_blank(),
-          legend.position="bottom",
-          legend.title = element_blank())
-  print(ps)
-}
-
-plotByRace(Epreworkshop, "Pre- survey")
-############################################################################
-
-
-colnames(Epreworkshop)
-table(Epreworkshop$Gender)
-table(Epreworkshop$With.Friend)
-table(Epreworkshop$Gender, Epreworkshop$With.Friend)
-
-
-############################################################################
-# plotByGenderGeneric <- function(df, ti, colna, colstr){
-#   #StartbyFiltering Gender Not Answered or not provided
-#   print(dim(df))
-#   x <- subset(df, df$Gender == "Male" | df$Gender == "Female") 
-#   x <- droplevels(x)
-#   print(dim(x))
-#   print(colna)
-#   y <- droplevels(subset(x, x[[colna]] != ""))
-#   print(dim(y))
-#   print(table(y[[colna]]))
-#   #####Plot Function Generic
-#   ps <- ggplot(data = y, aes( x = Gender, fill= Gender)) +
-# 
-#     geom_bar(aes(y = (..count..)/sum(..count..))) +
-#     scale_fill_manual(values = cbPalette) +
-#     theme_light() +
-#     labs(x = "Gender", y = paste("Total respondents", dim(y)[1], "in percentage ")) +
-#     ggtitle(paste(ti, "responses by gender and", colstr)) +
-#     scale_y_continuous(labels = scales::percent) +
-#     theme(plot.title = element_text(hjust = 0.5)) +
-#     theme(axis.text.x=element_blank(),
-#           axis.ticks.x=element_blank(),
-#           legend.position="bottom",
-#           legend.title = element_blank())+
-#     facet_grid(reformulate(colna), ".") # . ~ colna
-#   print(ps)
-#   ggsave(filename =  paste("./plots/FilteredGendervs", gsub("\\s", "",colstr),
-#                            "-",ti,".png", sep = ""),
-#          width = 12, height = 6, dpi = 120)
-# }
-# 
-# #plotByGenderGeneric <- function(df, ti, colna, colstr)
-# plotByGenderGeneric(Epreworkshop, "Pre-survey", "With.Friend" , "attended the workshop with a friend")
-# plotByGenderGeneric(Epreworkshop, "Pre-survey", "Discipline" , "discipline")
-# plotByGenderGeneric(Epreworkshop, "Pre-survey", "OS" , "operative system")
-# plotByGenderGeneric(Epreworkshop, "Pre-survey", "Programming.Usage" , "programming usage")
-# 
-# ### I'm not sure why there is 7 columns for current tools "Current.Tools.1" to "Current.Tools.7"
-# 
-# plotByGenderGeneric(Epreworkshop, "Pre-survey", "Have.Dataset" , "have dataset")
-# plotByGenderGeneric(Epreworkshop, "Pre-survey", "Data.Organization" , "importance of data organization")
-# plotByGenderGeneric(Epreworkshop, "Pre-survey", "Using.Scripting.Language" , "importance of using scripting language")
-# plotByGenderGeneric(Epreworkshop, "Pre-survey", "Using.R.or.Python" , "importance of using R or Python")
-# plotByGenderGeneric(Epreworkshop, "Pre-survey", "Value.of.SQL.or.Python" , "importance of using SQL or Python")
-# plotByGenderGeneric(Epreworkshop, "Pre-survey", "Age" , "age")
-# plotByGenderGeneric(Epreworkshop, "Pre-survey", "Race" , "race")
-# plotByGenderGeneric(Epreworkshop, "Pre-survey", "First.Time" , "first time taking a DC as learner")
-# plotByGenderGeneric(Epreworkshop, "Pre-survey", "Workshop.in.US" , "workshop taken in the US")
-# ### Very important the question of gender was only asked to people in the US
-# # table(Epreworkshop$Workshop.in.US, Epreworkshop$Gender)
-# # 
-# # Female Male Prefer not to say No Answer
-# # 0    0                 0       446
-# # No       0    0                 0       590
-# # Yes    717  540                22        28
-# 
-# 
-# 
