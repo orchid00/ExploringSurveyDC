@@ -10,9 +10,11 @@
 # Check installed packages before installing new packages.
 list.of.packages <- c("knitr", "tidyr", "tidyverse", "ggplot2", "dplyr",
                       "readr","purrr", "DBI", "ggmap", "likert",
-                      "mapproj", "RColorBrewer", "forcats")
+                      "mapproj", "RColorBrewer", "forcats", "extrafont",
+                      "scales")
 
 
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages, repos = "https://cran.rstudio.com/")
+rm(list.of.packages, new.packages)
 
