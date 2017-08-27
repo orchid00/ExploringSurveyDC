@@ -6,7 +6,8 @@
 #   Repo: https://github.com/carpentries/assessment-projects/tree/master/data-carpentry-projects
 #   Date: 2017, August 27
 #   Copyright (C) 2017 Paula Andrea Martinez
-#
+#   ORCID iD 0000-0002-8990-1985
+
 source(file = "scripts/exploring.R")
 
 # ###########################################################################
