@@ -4,7 +4,7 @@
 #   Description: report plotting functions
 #   Analyzing pre and post survey results from Data Carpentry 
 #   Repo: https://github.com/carpentries/assessment-projects/tree/master/data-carpentry-projects
-#   Date: 2017, August 09 - 26
+#   Date: 2017, August 09 - 27
 #   Copyright (C) 2017 Paula Andrea Martinez
 #
 source(file = "scripts/installpkg.R")
