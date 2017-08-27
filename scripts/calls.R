@@ -8,7 +8,7 @@
 #   Copyright (C) 2017 Paula Andrea Martinez
 #   ORCID iD 0000-0002-8990-1985
 
-source(file = "scripts/exploring.R")
+source(file = "scripts/exploringData.R")
 
 # ###########################################################################
 # Calls 

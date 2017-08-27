@@ -27,6 +27,7 @@ source(file = "scripts/installpkg.R")
 # The palette with grey:
 cbPalette <- c("#56B4E9", "#009E73", "#F0E442", "#0072B2", "#999999","#E69F00", "#D55E00", "#CC79A7", "#90EE90")
 # To use for fills, add
+library("ggplot2")
 scale_fill_manual(values = cbPalette)
 # To use for line and point colors, add
 scale_colour_manual(values = cbPalette)
