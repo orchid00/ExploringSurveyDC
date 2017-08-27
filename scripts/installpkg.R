@@ -5,7 +5,7 @@
 #                Run this script first
 #   Date: 2017, August 12
 #   Copyright (C) 2017 Paula Andrea Martinez
-#
+#   ORCID iD 0000-0002-8990-1985
 
 
 # To run the analysis some packages need to be previously installed.
