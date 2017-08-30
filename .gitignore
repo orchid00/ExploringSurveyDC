@@ -3,16 +3,10 @@
 .RData
 .Ruserdata
 .gitignore
-plots
+plots/
 Humor-Sans-1.0.ttf
 Survey.Rproj
-data/data.csv
-data/postdata_201706.csv
-data/postworkshopDC.csv
-data/predata_201706.csv
-data/preworkshopDC.csv
-data/preworkshop-public-archived.csv
-data/postworkshop-public-archived.csv
+data/
 testingScripts/
 
 

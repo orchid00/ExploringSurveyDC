@@ -158,8 +158,8 @@ cleanPreworkshopdata <- function(df){
 # Cleaning Epostworkshop
 cleanPostworkshopdata <- function(df){
   # # Postworkshop Status has one extra level "Response" only in row 1, now removed 
-  df <- df[-c(1), ]
-  df <- droplevels(df)
+  #df <- df[-c(1), ]
+  #df <- droplevels(df)
   print(dim(df))
   print(colnames(df))
   # [1] "Start.Date"                "End.Date"                  "When.Taking.Survey"        "First.Time"               
