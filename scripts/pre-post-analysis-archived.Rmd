@@ -1,0 +1,700 @@
+# Analysis of Data Carpentry's Archived Survey Data
+__Contributors__: [Kari L. Jordan](https://github.com/kariljordan) and [Paula Andrea](https://github.com/orchid00)
+__Work Cycle__: Ganymede
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(echo = FALSE,
+               message = FALSE,
+               warning = FALSE)
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(readr)
+library(purrr)
+library(tibble)
+library(DBI)
+library(ggmap)
+library(likert)
+library(mapproj)
+library(RColorBrewer)
+library(forcats)
+```
+In August 2017 Data Carpentry launched new pre- and post-workshop surveys that included skills-based questions. This report is an analysis of the old pre- and post-workshop surveys. 
+
+Responses collected for Data Carpentry's workshops from XX through XX are included in this report. In this XX year period, nearly XX responses were collected.
+
+PDFs of both the [pre](https://github.com/carpentries/assessment-projects/blob/master/data-carpentry-projects/presurvey.pdf) and [post](https://github.com/carpentries/assessment-projects/blob/master/data-carpentry-projects/postsurvey.pdf) workshop surveys, the data used in this analysis, and full R code are located in the [data-carpentry-projects](https://github.com/carpentries/assessment-projects/tree/master/data-carpentry-projects) folder in the Carpentries [assessment-projects](https://github.com/carpentries/assessment-projects) repo on GitHub. 
+
+Community members are invited to contribute code to this analysis. Feel free to use the data and [tell us](mailto: kariljordan@carpentries.org) about your findings.
+
+```{r include=FALSE}
+# KLJ Load the pre- and post-workshop data into R
+predata <- readr::read_csv("https://raw.githubusercontent.com/carpentries/assessment-projects/master/data-carpentry-projects/preworkshop_public_archived.csv")
+
+postdata <- readr::read_csv("https://raw.githubusercontent.com/carpentries/assessment-projects/master/data-carpentry-projects/postworkshop_public_archived.csv")
+```
+### Pre-Workshop Survey Demographics
+
+A breakdown of Data Carpentry's learners (pre-workshop) by __status__ is provided below.
+```{r echo=FALSE}
+### KLJ Plot for pre-survey respondents status
+prestatus = c(
+    "Undergraduate Student",
+    "Graduate Student",
+    "Post-doc",
+    "Faculty",
+    "Industry",
+    "Staff",
+    "Other (please specify)"
+  )
+prestatus = factor(prestatus)
+
+predata$Status = factor(predata$Status, levels = prestatus)
+
+data_prestatus_tally <- 
+  predata %>% 
+  group_by(Status) %>% 
+  tally() %>% 
+  filter(!is.na(Status)) 
+
+ggplot(data_prestatus_tally, 
+       aes(Status, y = 100 * (n/sum(n)),
+           n)) +
+  geom_bar(stat = "identity", fill="orange") +
+  geom_text(aes(label=n), size= 4) +
+  scale_x_discrete(labels = function(x) lapply(strwrap(x, width = 10, simplify = FALSE), paste, collapse="\n")) +
+  theme_classic() +
+  xlab("Status (Pre-Survey)") +
+  ylab("% Respondents") +
+  ggtitle("Majority of Pre-Survey Respondents were Graduate Students") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme_classic(base_size = 14)
+
+
+### KLJ Plot for post-survey respondents status
+poststatus = c(
+    "Undergraduate Student",
+    "Graduate Student",
+    "Post-doc",
+    "Faculty",
+    "Industry",
+    "Staff",
+    "Other (please specify)"
+  )
+poststatus = factor(poststatus)
+
+postdata$Status = factor(postdata$Status, levels = poststatus)
+
+data_poststatus_tally <- 
+  postdata %>% 
+  group_by(Status) %>% 
+  tally() %>% 
+  filter(!is.na(Status)) 
+
+ggplot(data_poststatus_tally, 
+       aes(Status, y = 100 * (n/sum(n)),
+           n)) +
+  geom_bar(stat = "identity", fill="orange") +
+  geom_text(aes(label=n), size= 4) +
+  scale_x_discrete(labels = function(x) lapply(strwrap(x, width = 10, simplify = FALSE), paste, collapse="\n")) +
+  theme_classic() +
+  xlab("Status (Post-Survey)") +
+  ylab("% Respondents") +
+  ggtitle("Majority of Post-Survey Respondents were XXX") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme_classic(base_size = 14)
+
+### KLJ Graduate Student is missing from the post-survey plot
+```
+
+```{r echo=FALSE}
+### KLJ Breakdown of pre-survey respondents by discipline
+ data_discipline_tally <- 
+  predata %>% 
+  group_by(Discipline) %>% 
+  tally() %>% 
+  mutate(`%` = round(n / sum(n) * 100, 1)) %>% 
+  arrange(desc(n)) %>%
+  filter(!is.na(Discipline))
+colnames <- c("Discipline (Pre-Survey)", "n", "%")
+kable(data_discipline_tally)
+
+### KLJ Breakdown of post-survey respondents by research
+ data_research_tally <- 
+  postdata %>% 
+  group_by(Research) %>% 
+  tally() %>% 
+  mutate(`%` = round(n / sum(n) * 100, 1)) %>% 
+  arrange(desc(n)) %>%
+  filter(!is.na(Research))
+colnames <- c("Research (Post-Survey)", "n", "%")
+#kable(data_research_tally)
+### KLJ How can we cut the research table off so that it doesn't show responses at 1% or less?
+```
+
+```{r echo=FALSE}
+### KLJ Plot of programming usage pre-survey 
+### KLJ How can we change the order of the factors? It needs to be:
+### Not sure, I have never programmed, Less than once a year, Several times a year, Weekly, Monthly, Daily
+data_programming_usage_tally <- 
+  predata %>% 
+  group_by(`Programming-Usage`) %>% 
+  tally() %>% 
+  filter(!is.na(`Programming-Usage`)) 
+
+ggplot(data_programming_usage_tally, 
+       aes(`Programming-Usage`, y = 100 * (n/sum(n)),
+           n)) +
+  geom_bar(stat = "identity", fill="orange") +
+  geom_text(aes(label=n), size= 4) +
+  scale_x_discrete(labels = function(x) lapply(strwrap(x, width = 10, simplify = FALSE), paste, collapse="\n")) +
+  theme_classic() +
+  xlab(" ") +
+  ylab("% Respondents") +
+  ggtitle("Programming Usage (Pre-Workshop)") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme_classic(base_size = 14)
+```
+
+```{r echo=FALSE}
+### KLJ Plot of satisfaction with data management strategy and data analysis workflow (pre-survey)
+### KLJ How can we put this information on one plot instead of two?
+### KLJ How can we fix the order of the factors?
+data_management_strategy_tally <- 
+  predata %>% 
+  group_by(`Data-Management-Strategy`) %>% 
+  tally() %>% 
+  filter(!is.na(`Data-Management-Strategy`)) 
+
+ggplot(data_management_strategy_tally, 
+       aes(`Data-Management-Strategy`, y = 100 * (n/sum(n)),
+           n)) +
+  geom_bar(stat = "identity", fill="orange") +
+  geom_text(aes(label=n), size= 4) +
+  scale_x_discrete(labels = function(x) lapply(strwrap(x, width = 10, simplify = FALSE), paste, collapse="\n")) +
+  theme_classic() +
+  xlab("") +
+  ylab("% Respondents") +
+  ggtitle("Perception of Pre-Workshop Data Management Strategy") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme_classic(base_size = 14)
+
+
+data_analysis_workflow_tally <- 
+  predata %>% 
+  group_by(`Data-Analysis-Workflow`) %>% 
+  tally() %>% 
+  filter(!is.na(`Data-Analysis-Workflow`)) 
+
+ggplot(data_analysis_workflow_tally, 
+       aes(`Data-Analysis-Workflow`, y = 100 * (n/sum(n)),
+           n)) +
+  geom_bar(stat = "identity", fill="orange") +
+  geom_text(aes(label=n), size= 4) +
+  scale_x_discrete(labels = function(x) lapply(strwrap(x, width = 10, simplify = FALSE), paste, collapse="\n")) +
+  theme_classic() +
+  xlab(" ") +
+  ylab("% Respondents") +
+  ggtitle("Perception of Pre-Workshop Data Analysis Workflow") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme_classic(base_size = 14)
+```
+```{r echo=FALSE}
+### KLJ Code chunk for Likert items (pre-survey)
+cols_with_Agree <- map_lgl(predata, ~`%in%`("Agree", .x))
+predata_agree <-  predata[ , cols_with_Agree]
+
+levels = c("Strongly disagree", "Disagree", "Neutral", "Agree", "Strongly agree")
+
+ factorfunction <- function(predata, factlevel){
+  factor(predata, 
+         levels=factlevel, 
+         ordered = TRUE)
+    fct_unify(predata, 
+              levels=factlevel)}
+
+predata_agree_likert <- likert(data.frame(lapply(predata_agree, factor, levels, ordered=TRUE)))
+ 
+title <- "Pre-Workshop Perception of Tools"
+ theme_update(plot.title = element_text(hjust = 0.5))
+plot(predata_agree_likert) + ggtitle(title) 
+
+ predata_agree <- map_if(predata_agree,
+                     is.character,
+                     as.factor)
+ ### KLJ How can we change the axis lables?
+```
+
+```{r echo=FALSE}
+ ### KLJ Do learners come to the workshop having a data set?
+ data_dataset_tally <- 
+  predata %>% 
+  group_by(`Have-Dataset`) %>% 
+  tally() %>% 
+  mutate(`%` = round(n / sum(n) * 100, 1)) %>% 
+  arrange(desc(n)) %>%
+  filter(!is.na(`Have-Dataset`)) 
+colnames <- c("Have Dataset?", "n", "%")
+ kable(data_dataset_tally, col.names = colnames)
+```
+
+```{r echo=FALSE}
+### KLJ Code chunk for Likert items (post-survey)
+cols_with_Agree <- map_lgl(postdata, ~`%in%`("Agree", .x))
+postdata_agree <-  postdata[ , cols_with_Agree]
+
+levels = c("Strongly disagree", "Disagree", "Neutral", "Agree", "Strongly agree")
+
+ factorfunction <- function(postdata, factlevel){
+  factor(postdata, 
+         levels=factlevel, 
+         ordered = TRUE)
+    fct_unify(postdata, 
+              levels=factlevel)}
+
+postdata_agree_likert <- likert(data.frame(lapply(postdata_agree, factor, levels, ordered=TRUE)))
+ 
+title <- "Post-Workshop Perception of Atmosphere & Tools"
+ theme_update(plot.title = element_text(hjust = 0.5))
+plot(postdata_agree_likert) + ggtitle(title) 
+
+ postdata_agree <- map_if(postdata_agree,
+                     is.character,
+                     as.factor)
+ ### KLJ How can we change the axis lables?
+ ### KLJ Can we make two separate Likert plots, one about workshop atmosphere and one for tools?
+```
+
+```{r echo=FALSE}
+### KLJ Code chunk for likert plot (post-workshop perception of workshop instructors/helpers)
+### KLJ This plot isn't working for some reason, so I commented it out.
+#ordered_often <-
+#  c("Never", "Rarely", "Sometimes", "Often", "All of the time")
+
+# KLJ Instructors
+#likert_cols_often_Inst <- 
+# postdata %>% 
+#   select(grep("Instructors-", names(.))) %>% 
+#   mutate_if(is.character, as.factor) %>% 
+#   mutate_all(funs(fct_relevel(., ordered_often))) %>% 
+#   filter_all(all_vars(!is.na(.))) 
+   
+#names(likert_cols_often_Inst) <- 
+#  gsub("Instructors-", "", names(likert_cols_often_Inst))
+  
+#lc_often_inst <- likert(data.frame(likert_cols_often_Inst))
+
+#plot(lc_often_inst) +
+#  ggtitle("Perception of Workshop Instructors")
+
+# KLJ Table:
+#xx <- 
+#likert_cols_often_Inst %>% 
+#  gather(key, value) %>% 
+#  group_by(key, value) %>% 
+#  tally() %>% 
+#  mutate(perc = round(n / sum(n) * 100, 1)) %>% 
+#  select(-n) %>% 
+#  spread(key, perc) %>% 
+#  slice(match(ordered_often,
+#              value))
+
+# KLJ Helpers
+#likert_cols_often_h <- 
+# postdata %>% 
+#   select(grep("Helpers-", names(.))) %>% 
+#   mutate_if(is.character, as.factor) %>% 
+#   mutate_all(funs(fct_relevel(., ordered_often))) %>% 
+#   filter_all(all_vars(!is.na(.))) 
+   
+#names(likert_cols_often_h) <- 
+#  gsub("Helpers-", "", names(likert_cols_often_h))
+  
+#lc_often_h <- likert(data.frame(likert_cols_often_h))
+
+#plot(lc_often_h) +
+#  ggtitle("Perception of Workshop Helpers")
+
+# KLJ Double check the plot with a table:
+#xx <- 
+#likert_cols_often_h %>% 
+#  gather(key, value) %>% 
+#  group_by(key, value) %>% 
+#  tally() %>% 
+#  mutate(perc = round(n / sum(n) * 100, 1)) %>% 
+#  select(-n) %>% 
+#  spread(key, perc) %>% 
+#  slice(match(ordered_often,
+#              value))
+```
+
+```{r include=FALSE}
+#KLJ This line of code will add a column called Current-Tools (concatenating columns Current-Tools-1 through 7)
+predata$`Current-Tools` <- paste(predata$`Current-Tools-1`, predata$`Current-Tools-2`, predata$`Current-Tools-3`, predata$`Current-Tools-4`, predata$`Current-Tools-5`, predata$`Current-Tools-6`, predata$`Current-Tools-7`, sep=',')
+
+#KLJ This line of code will add a column called Race (concatenating columns Race-American-Indian through Other)
+postdata$`Race` <- paste(postdata$`Race-American-Indian`, postdata$`Race-Asian`, postdata$`Race-Black`, postdata$`Race-Hispanic`, postdata$`Race-Islander`, postdata$`Race-White`, postdata$`Race-Prefer-Not`, postdata$`Race-Other`, sep=',')
+```
+
+```{r}
+# Paula's code
+#! /usr/bin/env Rscript
+
+#
+#   Description: report plotting functions
+#   Analyzing pre and post survey results from Data Carpentry 
+#   Repo: https://github.com/carpentries/assessment-projects/tree/master/data-carpentry-projects
+#   Date: 2017, August 09 - 27
+#   Copyright (C) 2017 Paula Andrea Martinez
+#   ORCID iD 0000-0002-8990-1985
+
+source(file = "Data_Carpentry/my-forked-repos/ExploringSurveyDC/scripts/installpkg.R")
+
+#####################################
+# download files
+
+download.file("https://raw.githubusercontent.com/carpentries/assessment-projects/master/data-carpentry-projects/preworkshop_public_archived.csv", 
+                destfile = "data/preworkshop_public_archived.csv", method = "wininet")
+
+ 
+download.file("https://raw.githubusercontent.com/carpentries/assessment-projects/master/data-carpentry-projects/postworkshop_public_archived.csv", 
+              destfile = "data/postworkshop_public_archived.csv", method = "wininet")
+
+
+############################################################################
+# Set blind-friendly colour Palette
+# http://www.cookbook-r.com/Graphs/Colors_%28ggplot2%29/
+# The palette with grey:
+cbPalette <- c("#56B4E9", "#009E73", "#F0E442", "#0072B2", "#999999","#E69F00", "#D55E00", "#CC79A7", "#90EE90")
+# To use for fills, add
+library("ggplot2")
+scale_fill_manual(values = cbPalette)
+# To use for line and point colors, add
+scale_colour_manual(values = cbPalette)
+
+# ###########################################################################
+# Exploring the dataset
+Exploring <- function(filecsv){
+    ps <- read.csv(filecsv)
+    print(filecsv)
+    print(paste("Data contains", 
+                 dim(ps)[1], "rows and", 
+                 dim(ps)[2], "columns")) 
+
+    return(ps)
+}
+# ###########################################################################
+# Reordering levels of a factor
+reorderLevels <- function(x, vec){
+  x <- factor(x,levels(x)[vec])
+  print(levels(x))
+  return(x)
+}
+# ###########################################################################
+# Define a helper function to change NAs from factor to character
+empty_as_na <- function(x){
+  if("factor" %in% class(x)) x <- as.character(x) ## since ifelse wont work with factors
+  ifelse(as.character(x)!="", x, "No answer")
+}
+# ###########################################################################
+# http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_%28ggplot2%29/
+# Multiple plot function
+#
+# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
+# - cols:   Number of columns in layout
+# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
+#
+# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
+# then plot 1 will go in the upper left, 2 will go in the upper right, and
+# 3 will go all the way across the bottom.
+#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+  
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+  
+  numPlots = length(plots)
+  
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                     ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+  
+  if (numPlots==1) {
+    print(plots[[1]])
+    
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+    
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+      
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+# ###########################################################################
+# Cleaning Epreworkshop
+cleanPreworkshopdata <- function(df){
+  print(colnames(df))
+  # "Start.Date" # munging to year.survey
+  # "End.Date"                 "When.Taking.Survey" # ignored      
+  # "First.Time" # ignored
+  # "Status"   #munging and reorder
+  # "Status.Other"   # ignored          
+  # "Department"   # ignored 
+  # "Discipline"   #munging and reorder
+  # "Discipline.Other"   # ignored       
+  # [10] "OS"                       "With.Friend"              "Programming.Usage"       
+  # [13] "Current.Tools.1"          "Current.Tools.2"          "Current.Tools.3"         
+  # [16] "Current.Tools.4"          "Current.Tools.5"          "Current.Tools.6"         
+  # [19] "Current.Tools.7"      # ignored       
+  # "Have.Dataset"  #munging names          "Data.Management.Strategy"
+  # [22] "Data.Analysis.Workflow"   "Data.Organization"        "Using.Scripting.Language"
+  # [25] "Using.R.or.Python"        "Value.of.SQL.or.Python"   "Hope.to.Learn"           
+  # [28] "Workshop.in.US"           "Age"                      "Gender"                  
+  # [31] "Gender.Other"             "Race"                     "Race.Other"  
+  df$year.survey <- as.factor(format(as.Date(as.character(df$Start.Date), "%m/%d/%y" ),"%Y"))
+  #print(levels(df$year.survey ))
+  levels(df$Status)[1] <- "No Answer"
+  levels(df$Status)[5] <- "Other"
+  levels(df$Status)[8] <- "Undergraduate Student"
+  df$Status <- reorderLevels(df$Status, c(8,3,6,2,7,4,5,1))
+  levels(df$Discipline)[1] <- "No Answer"
+  levels(df$Discipline)[3] <- "Neurosciences"
+  levels(df$Discipline)[5] <- "Computer sciences, Electrical Eng"
+  levels(df$Discipline)[6] <- "Geology, Oceanography, Meteorology"
+  levels(df$Discipline)[8] <- "Civil, Mechanical, Chemical Eng"
+  levels(df$Discipline)[10] <- "Biology and Genetics"
+  levels(df$Discipline)[11] <- "Botany, Ecology, Zoology"
+  levels(df$Discipline)[13] <- "Other"
+  levels(df$Discipline)[18] <- "Tech support/Lab tech/support prog"
+  #df$Discipline <- reorderLevels(df$Discipline, c(2,10, 11,4,8,5,7,6, 9, 12,3, 14, 15, 16, 17,18, 13,1))
+  levels(df$Have.Dataset)[2] <- "I am working on generating data"
+  levels(df$Have.Dataset)[3] <- "I do not have data yet"
+  levels(df$Have.Dataset)[4] <- "I have data and done a fair bit of analysis"
+  levels(df$Have.Dataset)[5] <- "I have data but haven't started analyzing it"
+  levels(df$Gender)[1] <- "No Answer"
+  df$Gender <- reorderLevels(df$Gender, c(2,3,4,1))
+  levels(df$Race)[1] <- "No Answer"
+  levels(df$Race)[7] <- "Other"
+  df$Race <- reorderLevels(df$Race, c(2,3,4,5,6,9,8,7,1))
+  print(paste("Data contains", 
+              dim(df)[1], "rows and", 
+              dim(df)[2], "columns")) 
+  return(df)
+}
+# ###########################################################################
+# Cleaning Epostworkshop
+cleanPostworkshopdata <- function(df){
+  # # Postworkshop Status has one extra level "Response" only in row 1, now removed 
+  #df <- df[-c(1), ]
+  #df <- droplevels(df)
+  print(dim(df))
+  print(colnames(df))
+  # [1] "Start.Date"                "End.Date"                  "When.Taking.Survey"        "First.Time"               
+  # [5] "Research"                  "Status"                    "Status.Other"              "Involvement"              
+  # [9] "Practical.Knowledge"       "Organize.Data"             "Use.OpenRefine"            "Import.Python"            
+  # [13] "Import.R"                  "Visualizations.in.Python"  "Visualizations.in.R"       "Construct.SQL"            
+  # [17] "Use.command.line"          "Skill.Level.Prior"         "Skill.Level.Following"     "Data.Organization"        
+  # [21] "Using.Scripting.Language"  "Using.R.or.Python"         "Value.of.SQL.or.Python"    "Application"              
+  # [25] "Worth.My.Time"             "Material"                  "Recommend"                 "Instructors.Clear.Answers"
+  # [29] "Instructors.Considerate"   "Instructors.Effective"     "Instructors.Enthusiastic"  "Workshop.in.US"           
+  # [33] "Age"                       "Gender"                    "Gender.Other"              "Race.American.Indian"     
+  # [37] "Race.Asian"                "Race.Black"                "Race.Hispanic"             "Race.Islander"            
+  # [41] "Race.White"                "Race.Prefer.Not"           "Race.Other"          
+  df$year.survey <- as.factor(format(as.Date(as.character(df$Start.Date), "%m/%d/%y" ),"%Y"))
+  #print(levels(df$year.survey ))
+  levels(df$Status)[1] <- "No Answer"
+  levels(df$Status)[5] <- "Other"
+  levels(df$Status)[8] <- "Undergraduate Student"
+  df$Status <- reorderLevels(df$Status, c(8,3,6,2,7,4,5,1))
+  levels(df$Gender)[1] <- "No Answer"
+  df$Gender <- reorderLevels(df$Gender, c(2,3,4,1))
+  # capitalize levels
+  levels(df$Workshop.in.US)[2] <- "No"
+  levels(df$Workshop.in.US)[3] <- "Yes"
+  print(paste("Data contains", 
+              dim(df)[1], "rows and", 
+              dim(df)[2], "columns")) 
+  return(df)
+  
+}
+# ###########################################################################
+# ######### plotting ##############
+# load all necesary packages
+library("ggplot2")
+library("scales")
+library("extrafont")
+font_import(pattern="[T/t]ahoma", prompt = FALSE)
+loadfonts()
+# ###########################################################################
+# Make barplots by Status 
+plotByStatusGeneric <- function(df, ti, colna, colstr, reorderingvec = NULL){
+  #StartbyFiltering colna Not Answered
+  print(dim(df))
+  print(colna)
+  y <- droplevels(subset(df, df[[colna]] != ""))
+  print(dim(y))
+  print(table(y[[colna]]))
+  if(!is.null(reorderingvec)){
+    y[[colna]] <- reorderLevels(y[[colna]], reorderingvec)
+  }
+  numoffacets <- length((table(y[[colna]])))
+  perc <- c()
+  for (f in 1:numoffacets){
+    perc[f] <- round((table(y[[colna]])[f] * 100 / dim(y)[1]), digits = 2)
+  }
+  #####Plot Function Generic
+  ps <- ggplot(data = y, aes( x = Status, fill= Status)) +
+    #coord_flip() +
+    geom_bar(aes(y = (..count..)/sum(..count..))) +
+    scale_fill_manual(values = cbPalette) +
+    theme_light() +
+    labs(x = "Status", y = paste("Total respondents", dim(y)[1], "shown in percentages")) +
+    ggtitle(paste(ti, "responses by status and", colstr)) +
+    scale_y_continuous(labels = scales::percent) +
+    theme(plot.title = element_text(hjust = 0.5)) +
+    theme(panel.grid.major.x = element_blank(),
+          axis.text.x=element_blank(),
+          axis.ticks.x=element_blank(),
+          legend.position="bottom",
+          legend.title = element_blank(),
+          strip.background = element_rect(fill =  "#888888"),
+          strip.placement = "outside",
+          strip.switch.pad.grid = unit(0.1, "cm"),
+          text = element_text(family="Tahoma", size=12))+
+    facet_grid(reformulate(colna), ".") # . ~ colna
+  ps <- ps +  annotate(geom = "text", label = paste0(perc, "%"), size = 4, 
+                       x = 4.5, y = dim(y)[1]/6000, fontface="bold",
+                       colour = "#888888", family="Tahoma")
+  print(ps)
+  # ggsave(filename =  paste("./plots/", ti, "_","Status_", gsub("\\.", "",colna),
+  #                           ".png", sep = ""),
+  #       width = 15, height = 8, dpi = 200)
+}
+# ###########################################################################
+# A try to make a generic plot
+plotGeneric <- function(df, ti, colna, colstr, reorderingvec = NULL, ext,reorderingvec2 = NULL ){
+  #StartbyFiltering colna Not Answered
+  print(dim(df))
+  print(colna)
+  print(ext)
+  y <- droplevels(subset(df, df[[colna]] != ""))
+  y <- droplevels(subset(y, y[[ext]] != ""))
+  print(dim(y))
+  if(!is.null(reorderingvec)){
+    y[[colna]] <- reorderLevels(y[[colna]], reorderingvec)
+  }
+  if(!is.null(reorderingvec2)){
+    y[[ext]] <- reorderLevels(y[[ext]], reorderingvec2)
+  }
+  print(table(y[[colna]],y[[ext]]))
+  numoffacets <- length((table(y[[colna]],y[[ext]])))
+  perc <- c()
+  for (f in 1:numoffacets){
+    perc[f] <- round((table(y[[colna]],y[[ext]])[f] * 100 / dim(y)[1]), digits = 2)
+  }
+  #####Plot Function Generic
+  ps <- ggplot(data = y, aes( x = Status, fill= Status) )+
+    #coord_flip() +
+    geom_bar(aes(y = (..count..)/sum(..count..))) +
+    scale_fill_manual(values = cbPalette) +
+    theme_light() + 
+    labs(x = "Status", y = paste("Total respondents", dim(y)[1], "shown in percentages")) +
+    ggtitle(paste(ti, "responses by status and", colstr)) +
+    scale_y_continuous( labels = percent_format())+
+    theme(panel.grid.major.x =  element_blank(),
+          plot.title   = element_text(hjust = 0.5),
+          axis.text.x  = element_blank(),
+          axis.ticks.x = element_blank(),
+          legend.position = "bottom",
+          legend.title    = element_blank(),
+          strip.background = element_rect(fill =  "#888888"),
+          strip.placement = "outside",
+          strip.switch.pad.grid = unit(0.1, "cm"),
+          text=element_text(family="Tahoma", size=12))+
+    #facet_grid(reformulate(colna), ".") # . ~ colna
+    facet_grid(eval(reformulate(colna, ext)))
+  ps <- ps +  annotate(geom = "text", label = paste0(perc, "%"), size = 4, 
+                       x = 4.5, y = dim(y)[1]/6000, fontface="bold",
+                       colour = "#888888", family="Tahoma")
+  ggsave(filename =  paste("./plots/", ti, "_",ext, "_", gsub("\\.", "",colna),
+                            ".png", sep = ""),
+        width = 15, height = 8, dpi = 200)
+  print(ps)
+}
+# ###########################################################################
+# Plots for Gender, Race and Age should be only from US respondents
+# ###########################################################################
+# Plots by Gender should be only taken for answers within US 
+plotByGender <- function(df, ti, reorderingvec=NULL){
+  if(!is.null(reorderingvec)){
+      df[["Gender"]] <- reorderLevels(df[["Gender"]], reorderingvec)
+  }
+  ps <- ggplot(data = df, aes( x = Gender, fill = Gender )) +
+    #coord_flip() +
+    geom_bar(aes(y = (..count..)/sum(..count..)) ) +
+    scale_fill_manual(values = cbPalette) +
+    theme_light() +
+    labs(x = "Gender", y = paste("Total respondents", dim(df)[1], "shown in percentages")) +
+    ggtitle(paste(ti, "responses by gender") ) +
+    scale_y_continuous(labels = scales::percent, limits = c(0, 0.7)) +
+    theme(plot.title = element_text(hjust = 0.5)) +
+    theme(axis.text.x=element_blank(),
+          axis.ticks.x=element_blank(),
+          legend.position="bottom",
+          legend.title = element_blank())
+  #print(ps)
+}
+# ###########################################################################
+# Plot by Gender and Status
+plotByGenderStatus <- function(df, ti){
+  ps <- ggplot(data = df, aes( x = Gender, fill= Gender)) +
+    geom_bar(aes(y = (..count..)/sum(..count..))) +
+    scale_fill_manual(values = cbPalette) +
+    theme_light() +
+    labs(x = "Gender", y = paste("Total respondents", dim(df)[1], "shown in percentages")) +
+    ggtitle(paste(ti, "responses by gender and status")) +
+    scale_y_continuous(labels = scales::percent) +
+    theme(plot.title = element_text(hjust = 0.5)) +
+    theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        legend.position="bottom",
+        legend.title = element_blank())+
+    facet_grid(. ~ Status)
+  print(ps)
+  #ggsave(filename =  paste("./plots/GendervsStatus-",ti,".png", sep = ""),
+  #       width = 12, height = 6, dpi = 120)
+}
+# ###########################################################################
+# Excluding "Prefer not to say and No answer from Gender and Status"
+ExcludeNANotGiven <- function(df){
+  newpredf <- data.frame(Gender = factor(df$Gender),
+                  Status = factor(df$Status))
+  print(head(newpredf))
+  print(str(newpredf))
+  print(table(newpredf$Gender))
+  print(table(newpredf))
+  x <- subset(newpredf, newpredf$Gender == "Male" |newpredf$Gender == "Female", drop = T)
+  x <- subset(x, x$Status != "No Answer", drop = T)
+  print(table(x))
+  y <- droplevels(x)
+  print(table(y))
+  print(dim(y))
+  return(y)
+}
+# ###########################################################################
+```
