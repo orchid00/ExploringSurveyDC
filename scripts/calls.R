@@ -15,7 +15,7 @@ source(file = "scripts/exploringData.R")
 # Run line by line
 # ###########################################################################
 ## ---- exploring-presurvey-data ----
-Epreworkshop <- Exploring("./data/preworkshop-public-archived.csv")
+Epreworkshop <- Exploring("data/preworkshop_public_archived.csv")
 Epreworkshop <- cleanPreworkshopdata(Epreworkshop)
 ## ---- plotting-presurvey-data ----
 plotByStatusGeneric(Epreworkshop, "Pre-survey", "year.survey" , "year of survey response")
@@ -73,7 +73,7 @@ plotGeneric(EpreworkshopUS, "Pre-surveyUS","With.Friend" , "came with friend vs 
 plotByStatusGeneric(EpreworkshopUS, "Pre-surveyUS", "Race" , "race")
 # ############################################################################
 ## ---- exploring-postsurvey-data ----
-Epostworkshop <- Exploring("./data/postworkshop-public-archived.csv")
+Epostworkshop <- Exploring("data/postworkshop_public_archived.csv")
 Epostworkshop <- cleanPostworkshopdata(Epostworkshop)
 # Postworkshop has about half the entries in comparison with the preworkshop 
 ## ---- plotting-postsurvey-data ----
