@@ -3,7 +3,7 @@
 .RData
 .Ruserdata
 .gitignore
-plots/
+plots_/
 Humor-Sans-1.0.ttf
 Survey.Rproj
 data/
