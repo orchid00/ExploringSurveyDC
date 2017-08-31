@@ -13,12 +13,12 @@ source(file = "scripts/installpkg.R")
 #####################################
 # download files
 
-download.file("https://raw.githubusercontent.com/carpentries/assessment-projects/master/data-carpentry-projects/preworkshop_public_archived.csv", 
-                destfile = "data/preworkshop_public_archived.csv", method = "wininet")
+#download.file("https://raw.githubusercontent.com/carpentries/assessment-projects/master/data-carpentry-projects/preworkshop_public_archived.csv", 
+#                destfile = "data/preworkshop_public_archived.csv", method = "wininet")
 
  
-download.file("https://raw.githubusercontent.com/carpentries/assessment-projects/master/data-carpentry-projects/postworkshop_public_archived.csv", 
-              destfile = "data/postworkshop_public_archived.csv", method = "wininet")
+#download.file("https://raw.githubusercontent.com/carpentries/assessment-projects/master/data-carpentry-projects/postworkshop_public_archived.csv", 
+#              destfile = "data/postworkshop_public_archived.csv", method = "wininet")
 
 
 ############################################################################
