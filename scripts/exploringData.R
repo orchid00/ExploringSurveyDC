@@ -239,9 +239,9 @@ plotByStatusGeneric <- function(df, ti, colna, colstr, reorderingvec = NULL){
                        x = 4.5, y = dim(y)[1]/6000, fontface="bold",
                        colour = "#888888", family="Tahoma")
   print(ps)
-  # ggsave(filename =  paste("./plots/", ti, "_","Status_", gsub("\\.", "",colna),
-  #                           ".png", sep = ""),
-  #       width = 15, height = 8, dpi = 200)
+  ggsave(filename =  paste("./plots/", ti, "_","Status_", gsub("\\.", "",colna),
+                            ".png", sep = ""),
+        width = 15, height = 8, dpi = 200)
 }
 # ###########################################################################
 # A try to make a generic plot
