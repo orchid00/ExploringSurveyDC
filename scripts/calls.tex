@@ -1,0 +1,635 @@
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\let\hlipl\hlkwb
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\usepackage[sc]{mathpazo}
+\renewcommand{\sfdefault}{lmss}
+\renewcommand{\ttdefault}{lmtt}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\geometry{verbose,tmargin=2.5cm,bmargin=2.5cm,lmargin=2.5cm,rmargin=2.5cm}
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+\usepackage[unicode=true,pdfusetitle,
+ bookmarks=true,bookmarksnumbered=true,bookmarksopen=true,bookmarksopenlevel=2,
+ breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=false]
+ {hyperref}
+\hypersetup{
+ pdfstartview={XYZ null null 1}}
+
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\topfraction}{0.8}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\floatpagefraction}{0.75}
+
+\makeatother
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+
+
+
+
+
+
+
+The results below are generated from an R script.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{#! /usr/bin/env Rscript}
+
+\hlcom{#}
+\hlcom{#   Description: report plotting calls}
+\hlcom{#   Analyzing pre and post survey results from Data Carpentry }
+\hlcom{#   Repo: https://github.com/carpentries/assessment-projects/tree/master/data-carpentry-projects}
+\hlcom{#   Date: 2017, August 27}
+\hlcom{#   Copyright (C) 2017 Paula Andrea Martinez}
+\hlcom{#   ORCID iD 0000-0002-8990-1985}
+
+\hlkwd{source}\hlstd{(}\hlkwc{file} \hlstd{=} \hlstr{"scripts/exploringData.R"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning in file(filename, "{}r"{}, encoding = encoding): cannot open file 'scripts/exploringData.R': No such file or directory}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in file(filename, "{}r"{}, encoding = encoding): cannot open the connection}}\begin{alltt}
+\hlcom{# ###########################################################################}
+\hlcom{# Calls }
+\hlcom{# Run line by line}
+\hlcom{# ###########################################################################}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{Epreworkshop} \hlkwb{<-} \hlkwd{Exploring}\hlstd{(}\hlstr{"data/preworkshop_public_archived.csv"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in Exploring("{}data/preworkshop\_public\_archived.csv"{}): could not find function "{}Exploring"{}}}\begin{alltt}
+\hlstd{Epreworkshop} \hlkwb{<-} \hlkwd{cleanPreworkshopdata}\hlstd{(Epreworkshop)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in cleanPreworkshopdata(Epreworkshop): could not find function "{}cleanPreworkshopdata"{}}}\end{kframe}
+\end{knitrout}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epreworkshop,} \hlstr{"Pre-survey"}\hlstd{,} \hlstr{"year.survey"} \hlstd{,} \hlstr{"year of survey response"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epreworkshop, "{}Pre-survey"{}, "{}year.survey"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epreworkshop,} \hlstr{"Pre-survey"}\hlstd{,} \hlstr{"First.Time"} \hlstd{,} \hlstr{"first time taking a DC as learner"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,}\hlnum{1}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epreworkshop, "{}Pre-survey"{}, "{}First.Time"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# table(Epreworkshop$Discipline) # too many variables to plot by Biology and Genetics is the discipline with the majority of answers}
+\hlcom{# plotByStatusGeneric(Epreworkshop, "Pre-survey", "Discipline" , "discipline", c(2,10, 11,4,8,5,7,6, 9, 12,3, 14, 15, 16, 17,18, 13,1))}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epreworkshop,} \hlstr{"Pre-survey"}\hlstd{,} \hlstr{"OS"} \hlstd{,} \hlstr{"operative system"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{3}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epreworkshop, "{}Pre-survey"{}, "{}OS"{}, "{}operative system"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# table(Epreworkshop$With.Friend)}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epreworkshop,} \hlstr{"Pre-survey"}\hlstd{,} \hlstr{"With.Friend"} \hlstd{,} \hlstr{"attended with a friend"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{3}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epreworkshop, "{}Pre-survey"{}, "{}With.Friend"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# table(Epreworkshop$Programming.Usage)}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epreworkshop,} \hlstr{"Pre-survey"}\hlstd{,} \hlstr{"Programming.Usage"} \hlstd{,} \hlstr{"programming usage"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,} \hlnum{3}\hlstd{,} \hlnum{6}\hlstd{,} \hlnum{4}\hlstd{,} \hlnum{7}\hlstd{,} \hlnum{1}\hlstd{,} \hlnum{5}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epreworkshop, "{}Pre-survey"{}, "{}Programming.Usage"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# Skipping current tools "Current.Tools.1" to "Current.Tools.7"}
+\hlcom{# table(Epreworkshop$Have.Dataset)}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epreworkshop,} \hlstr{"Pre-survey"}\hlstd{,} \hlstr{"Have.Dataset"} \hlstd{,} \hlstr{"having a dataset"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{3}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epreworkshop, "{}Pre-survey"{}, "{}Have.Dataset"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# "Data.Management.Strategy" "Data.Analysis.Workflow" are better plotted with a Likert plot }
+\hlcom{# table(Epreworkshop$Data.Management.Strategy)}
+\hlcom{# table(Epreworkshop$Data.Analysis.Workflow)}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epreworkshop,} \hlstr{"Pre-survey"}\hlstd{,} \hlstr{"Data.Organization"} \hlstd{,} \hlstr{"importance of data organization"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{5}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epreworkshop, "{}Pre-survey"{}, "{}Data.Organization"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# table(Epreworkshop$Using.Scripting.Language)}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epreworkshop,} \hlstr{"Pre-survey"}\hlstd{,} \hlstr{"Using.Scripting.Language"} \hlstd{,} \hlstr{"importance of using a scripting language"}\hlstd{,}  \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{5}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epreworkshop, "{}Pre-survey"{}, "{}Using.Scripting.Language"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# ### Skipped because question is not clear}
+\hlcom{# table(Epreworkshop$Using.R.or.Python)}
+\hlcom{# table(Epreworkshop$Value.of.SQL.or.Python)}
+\hlcom{# Taken in the US}
+\hlcom{# table(Epreworkshop$Workshop.in.US)}
+\hlcom{# 31% No 69% Yes}
+\hlcom{#(590 * 100) / 1890  }
+\hlcom{# ### [1] 31.21693}
+\hlcom{#(1307 * 100) / 1890  }
+\hlcom{# ###[1] 69.15344}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epreworkshop,} \hlstr{"Pre-survey"}\hlstd{,} \hlstr{"Workshop.in.US"} \hlstd{,} \hlstr{"workshop taken in the US"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epreworkshop, "{}Pre-survey"{}, "{}Workshop.in.US"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# make workshop in the US per year}
+\hlkwd{plotGeneric}\hlstd{(Epreworkshop,} \hlstr{"Pre-survey"}\hlstd{,} \hlstr{"Workshop.in.US"} \hlstd{,} \hlstr{"workshop taken in the US per year"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,}\hlnum{1}\hlstd{),} \hlstr{"year.survey"} \hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotGeneric(Epreworkshop, "{}Pre-survey"{}, "{}Workshop.in.US"{}, "{}workshop taken in the US per year"{}, : could not find function "{}plotGeneric"{}}}\begin{alltt}
+\hlcom{# this is very interesting, shows that for 2017 only 10% of respondents have taken the survey outside of the US}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epreworkshop,} \hlstr{"Pre-survey"}\hlstd{,} \hlstr{"Age"} \hlstd{,} \hlstr{"age"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epreworkshop, "{}Pre-survey"{}, "{}Age"{}, "{}age"{}): could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlkwd{plotGeneric}\hlstd{(Epreworkshop,} \hlstr{"Pre-survey"}\hlstd{,} \hlstr{"Age"} \hlstd{,} \hlstr{"age per year"}\hlstd{,}\hlkwa{NULL}\hlstd{,} \hlstr{"year.survey"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotGeneric(Epreworkshop, "{}Pre-survey"{}, "{}Age"{}, "{}age per year"{}, : could not find function "{}plotGeneric"{}}}\begin{alltt}
+\hlcom{# doesn't really mean that more people in the US came with a friend, it just looks like that because more people}
+\hlcom{# have taken the survey in the US}
+\hlkwd{plotGeneric}\hlstd{(Epreworkshop,} \hlstr{"Pre-survey"}\hlstd{,}\hlstr{"With.Friend"} \hlstd{,} \hlstr{"came with friend vs taken in the US"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{3}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{),}
+            \hlstr{"Workshop.in.US"} \hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,}\hlnum{1}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotGeneric(Epreworkshop, "{}Pre-survey"{}, "{}With.Friend"{}, "{}came with friend vs taken in the US"{}, : could not find function "{}plotGeneric"{}}}\begin{alltt}
+\hlkwd{plotGeneric}\hlstd{(Epreworkshop,} \hlstr{"Pre-survey"}\hlstd{,} \hlstr{"OS"}\hlstd{,} \hlstr{"OS vs taken in the US"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{3}\hlstd{),} \hlstr{"Workshop.in.US"} \hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,}\hlnum{1}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotGeneric(Epreworkshop, "{}Pre-survey"{}, "{}OS"{}, "{}OS vs taken in the US"{}, : could not find function "{}plotGeneric"{}}}\begin{alltt}
+\hlkwd{plotGeneric}\hlstd{(Epreworkshop,} \hlstr{"Pre-survey"}\hlstd{,} \hlstr{"OS"}\hlstd{,} \hlstr{"OS vs year of the survey"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{3}\hlstd{),} \hlstr{"year.survey"} \hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotGeneric(Epreworkshop, "{}Pre-survey"{}, "{}OS"{}, "{}OS vs year of the survey"{}, : could not find function "{}plotGeneric"{}}}\end{kframe}
+\end{knitrout}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Filter all of those who did not take the survey in the US }
+\hlstd{EpreworkshopUS} \hlkwb{<-} \hlkwd{subset}\hlstd{(Epreworkshop, Workshop.in.US} \hlopt{==} \hlstr{"Yes"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in subset(Epreworkshop, Workshop.in.US == "{}Yes"{}): object 'Epreworkshop' not found}}\begin{alltt}
+\hlkwd{dim}\hlstd{(EpreworkshopUS)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in eval(expr, envir, enclos): object 'EpreworkshopUS' not found}}\begin{alltt}
+\hlkwd{plotByStatusGeneric}\hlstd{(EpreworkshopUS,} \hlstr{"Pre-surveyUS"}\hlstd{,} \hlstr{"Age"} \hlstd{,} \hlstr{"age"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(EpreworkshopUS, "{}Pre-surveyUS"{}, "{}Age"{}, "{}age"{}): could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# Gender... this is not a reality, it only means that more women responded in the survey}
+\hlcom{# not that there were more women have taken the workshop}
+\hlkwd{plotByStatusGeneric}\hlstd{(EpreworkshopUS,} \hlstr{"Pre-surveyUS"}\hlstd{,} \hlstr{"Gender"} \hlstd{,} \hlstr{"gender"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(EpreworkshopUS, "{}Pre-surveyUS"{}, "{}Gender"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# Combined plot}
+\hlkwd{plotGeneric}\hlstd{(EpreworkshopUS,} \hlstr{"Pre-surveyUS"}\hlstd{,}\hlstr{"With.Friend"} \hlstd{,} \hlstr{"came with friend vs gender"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{3}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{),}
+            \hlstr{"Gender"} \hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotGeneric(EpreworkshopUS, "{}Pre-surveyUS"{}, "{}With.Friend"{}, "{}came with friend vs gender"{}, : could not find function "{}plotGeneric"{}}}\begin{alltt}
+\hlcom{# Names are too long to be shown in categories }
+\hlkwd{plotByStatusGeneric}\hlstd{(EpreworkshopUS,} \hlstr{"Pre-surveyUS"}\hlstd{,} \hlstr{"Race"} \hlstd{,} \hlstr{"race"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(EpreworkshopUS, "{}Pre-surveyUS"{}, "{}Race"{}, "{}race"{}): could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# ############################################################################}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{Epostworkshop} \hlkwb{<-} \hlkwd{Exploring}\hlstd{(}\hlstr{"data/postworkshop_public_archived.csv"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in Exploring("{}data/postworkshop\_public\_archived.csv"{}): could not find function "{}Exploring"{}}}\begin{alltt}
+\hlstd{Epostworkshop} \hlkwb{<-} \hlkwd{cleanPostworkshopdata}\hlstd{(Epostworkshop)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in cleanPostworkshopdata(Epostworkshop): could not find function "{}cleanPostworkshopdata"{}}}\begin{alltt}
+\hlcom{# Postworkshop has about half the entries in comparison with the preworkshop }
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# 2017 has of course less entries because it contains only answers of half a year}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"year.survey"} \hlstd{,} \hlstr{"year of survey response"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epostworkshop, "{}Post-survey"{}, "{}year.survey"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# there is not much to do with columns that are repeated with the pre-survey}
+\hlcom{# #  "When.Taking.Survey"        "First.Time"}
+\hlcom{# # "Research" is a text field wich is difficult to categorize}
+\hlcom{# table(Epostworkshop$Involvement)}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Involvement"} \hlstd{,} \hlstr{"level of involvement"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{3}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epostworkshop, "{}Post-survey"{}, "{}Involvement"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# table(Epostworkshop$Practical.Knowledge)}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Practical.Knowledge"} \hlstd{,} \hlstr{"practical knowledge gained"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,} \hlnum{3}\hlstd{,} \hlnum{2}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epostworkshop, "{}Post-survey"{}, "{}Practical.Knowledge"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlkwd{plotGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Practical.Knowledge"} \hlstd{,}
+            \hlstr{"practical knowledge gained vs level of involvement"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,} \hlnum{3}\hlstd{,} \hlnum{2}\hlstd{),}\hlstr{"Involvement"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{3}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotGeneric(Epostworkshop, "{}Post-survey"{}, "{}Practical.Knowledge"{}, : could not find function "{}plotGeneric"{}}}\begin{alltt}
+\hlcom{# #####The folowwing will be better with a Likert plot}
+\hlcom{# # "Organize.Data"             "Use.OpenRefine"            "Import.Python"            }
+\hlcom{# # [13] "Import.R"                  "Visualizations.in.Python"  "Visualizations.in.R"       "Construct.SQL"            }
+\hlcom{# # [17] "Use.command.line" }
+\hlcom{# # For information of each question}
+\hlcom{# table(Epostworkshop$Organize.Data)}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Organize.Data"} \hlstd{,} \hlstr{"better understanding on how to organize data in spreadsheets"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{5}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{6}\hlstd{,}\hlnum{3}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epostworkshop, "{}Post-survey"{}, "{}Organize.Data"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# table(Epostworkshop$Use.OpenRefine)}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Use.OpenRefine"} \hlstd{,} \hlstr{"better understanding on how to use OpenRefine for data cleaning"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{5}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{6}\hlstd{,}\hlnum{3}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epostworkshop, "{}Post-survey"{}, "{}Use.OpenRefine"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# table(Epostworkshop$Import.Python)}
+\hlcom{# it seems like half of the workshops did not cover python }
+\hlkwd{plotByStatusGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Import.Python"} \hlstd{,} \hlstr{"better understanding on how to import a file in Python and work with the data"}\hlstd{,}  \hlkwd{c}\hlstd{(}\hlnum{5}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{6}\hlstd{,}\hlnum{3}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epostworkshop, "{}Post-survey"{}, "{}Import.Python"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# table(Epostworkshop$Visualizations.in.Python)}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Visualizations.in.Python"} \hlstd{,} \hlstr{"better understanding on how to do visualizations in Python"}\hlstd{,}  \hlkwd{c}\hlstd{(}\hlnum{5}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{6}\hlstd{,}\hlnum{3}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epostworkshop, "{}Post-survey"{}, "{}Visualizations.in.Python"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# table(Epostworkshop$Import.R)}
+\hlcom{# It seems like almost half (40%) of the workshops covered R}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Import.R"} \hlstd{,} \hlstr{"better understanding on how to import a file in R and work with the data"}\hlstd{,}  \hlkwd{c}\hlstd{(}\hlnum{5}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{6}\hlstd{,}\hlnum{3}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epostworkshop, "{}Post-survey"{}, "{}Import.R"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# table(Epostworkshop$Visualizations.in.R)}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Visualizations.in.R"} \hlstd{,} \hlstr{"better understanding on how to do visualizations in R"}\hlstd{,}  \hlkwd{c}\hlstd{(}\hlnum{5}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{6}\hlstd{,}\hlnum{3}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epostworkshop, "{}Post-survey"{}, "{}Visualizations.in.R"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# table(Epostworkshop$Construct.SQL)}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Construct.SQL"} \hlstd{,} \hlstr{"better understanding on how to construct SQL queries"}\hlstd{,}  \hlkwd{c}\hlstd{(}\hlnum{5}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{6}\hlstd{,}\hlnum{3}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epostworkshop, "{}Post-survey"{}, "{}Construct.SQL"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# table(Epostworkshop$Use.command.line)}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Use.command.line"} \hlstd{,} \hlstr{"better understanding on how to use command line"}\hlstd{,}  \hlkwd{c}\hlstd{(}\hlnum{5}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{6}\hlstd{,}\hlnum{3}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epostworkshop, "{}Post-survey"{}, "{}Use.command.line"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# table(Epostworkshop$Skill.Level.Prior)}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Skill.Level.Prior"} \hlstd{,} \hlstr{"data management and analysis skills prior the workshop"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{5}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epostworkshop, "{}Post-survey"{}, "{}Skill.Level.Prior"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# Combined plot}
+\hlkwd{plotGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Skill.Level.Prior"} \hlstd{,}
+            \hlstr{"skills prior the workshop vs level of involvement"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{5}\hlstd{),}\hlstr{"Involvement"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{3}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotGeneric(Epostworkshop, "{}Post-survey"{}, "{}Skill.Level.Prior"{}, : could not find function "{}plotGeneric"{}}}\begin{alltt}
+\hlcom{# table(Epostworkshop$Skill.Level.Following)}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Skill.Level.Following"} \hlstd{,} \hlstr{"data management and analysis skills following the workshop"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{3}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{1}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epostworkshop, "{}Post-survey"{}, "{}Skill.Level.Following"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# Combined plot}
+\hlkwd{plotGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Skill.Level.Following"} \hlstd{,}
+            \hlstr{"skills level following the workshop vs level of involvement"}\hlstd{,}  \hlkwd{c}\hlstd{(}\hlnum{3}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{1}\hlstd{),}\hlstr{"Involvement"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{3}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotGeneric(Epostworkshop, "{}Post-survey"{}, "{}Skill.Level.Following"{}, : could not find function "{}plotGeneric"{}}}\begin{alltt}
+\hlcom{# table(Epostworkshop$Application)}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Application"} \hlstd{,} \hlstr{"can immediately applied what was learned at the workshop"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{5}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epostworkshop, "{}Post-survey"{}, "{}Application"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# Combined plot}
+\hlkwd{plotGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Application"} \hlstd{,}
+            \hlstr{"can immediately applied what was learned vs level of involvement"}\hlstd{,}  \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{5}\hlstd{),}\hlstr{"Involvement"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{3}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotGeneric(Epostworkshop, "{}Post-survey"{}, "{}Application"{}, "{}can immediately applied what was learned vs level of involvement"{}, : could not find function "{}plotGeneric"{}}}\begin{alltt}
+\hlcom{# needs to be a big squared plot}
+\hlkwd{plotGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Application"} \hlstd{,}
+            \hlstr{"can immediately applied what was learned vs skill level prior the workshop"}\hlstd{,}  \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{5}\hlstd{),}\hlstr{"Skill.Level.Prior"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{5}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotGeneric(Epostworkshop, "{}Post-survey"{}, "{}Application"{}, "{}can immediately applied what was learned vs skill level prior the workshop"{}, : could not find function "{}plotGeneric"{}}}\begin{alltt}
+\hlcom{# table(Epostworkshop$Worth.My.Time)}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Worth.My.Time"} \hlstd{,} \hlstr{"the workshop was worth my time"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{5}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epostworkshop, "{}Post-survey"{}, "{}Worth.My.Time"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# Combined plot}
+\hlkwd{plotGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Worth.My.Time"} \hlstd{,}
+            \hlstr{"the workshop was worth my time vs level of involvement"}\hlstd{,}  \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{5}\hlstd{),}\hlstr{"Involvement"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{3}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotGeneric(Epostworkshop, "{}Post-survey"{}, "{}Worth.My.Time"{}, "{}the workshop was worth my time vs level of involvement"{}, : could not find function "{}plotGeneric"{}}}\begin{alltt}
+\hlcom{# table(Epostworkshop$Material)}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Material"} \hlstd{,} \hlstr{"the material matched the workshop description"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{5}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epostworkshop, "{}Post-survey"{}, "{}Material"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# table(Epostworkshop$Recommend)}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Recommend"} \hlstd{,} \hlstr{"would recommend the workshop"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{5}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epostworkshop, "{}Post-survey"{}, "{}Recommend"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# Combined plot # big square plot}
+\hlcom{# great relationship}
+\hlkwd{plotGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Worth.My.Time"} \hlstd{,}
+            \hlstr{"the workshop was worth my time vs I will recommend this workshop"}\hlstd{,}  \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{5}\hlstd{),}\hlstr{"Recommend"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{5}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotGeneric(Epostworkshop, "{}Post-survey"{}, "{}Worth.My.Time"{}, "{}the workshop was worth my time vs I will recommend this workshop"{}, : could not find function "{}plotGeneric"{}}}\begin{alltt}
+\hlcom{# Combined plot}
+\hlkwd{plotGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Recommend"} \hlstd{,}
+            \hlstr{"I will recommend this workshop vs level of involvement"}\hlstd{,}  \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{5}\hlstd{),}\hlstr{"Involvement"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{3}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotGeneric(Epostworkshop, "{}Post-survey"{}, "{}Recommend"{}, "{}I will recommend this workshop vs level of involvement"{}, : could not find function "{}plotGeneric"{}}}\begin{alltt}
+\hlcom{# Combined plot}
+\hlkwd{plotGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Recommend"} \hlstd{,}
+            \hlstr{"I will recommend this workshop vs it was worth my time"}\hlstd{,}  \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{5}\hlstd{),}\hlstr{"Worth.My.Time"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{5}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotGeneric(Epostworkshop, "{}Post-survey"{}, "{}Recommend"{}, "{}I will recommend this workshop vs it was worth my time"{}, : could not find function "{}plotGeneric"{}}}\begin{alltt}
+\hlcom{# table(Epostworkshop$Instructors.Effective)}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Instructors.Effective"} \hlstd{,} \hlstr{"were the instructors effective in teaching the workshop?"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{5}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{3}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epostworkshop, "{}Post-survey"{}, "{}Instructors.Effective"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# Combined plot}
+\hlcom{# great relationship}
+\hlkwd{plotGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Instructors.Effective"} \hlstd{,}
+            \hlstr{"were the instructors effective in teaching vs I will recommend this workshop"}\hlstd{,}  \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{5}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{3}\hlstd{),}\hlstr{"Recommend"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{3}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{5}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotGeneric(Epostworkshop, "{}Post-survey"{}, "{}Instructors.Effective"{}, : could not find function "{}plotGeneric"{}}}\begin{alltt}
+\hlcom{# table(Epostworkshop$Instructors.Enthusiastic)}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Instructors.Enthusiastic"} \hlstd{,} \hlstr{"were the instructors enthusiastic about the workshop?"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{3}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epostworkshop, "{}Post-survey"{}, "{}Instructors.Enthusiastic"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# Combined plot}
+\hlcom{# great relationship}
+\hlkwd{plotGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Instructors.Effective"} \hlstd{,}
+            \hlstr{"instructors were effective in teaching vs instructors were enthusiastic"}\hlstd{,}  \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{5}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{3}\hlstd{),}\hlstr{"Instructors.Enthusiastic"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{,}\hlnum{4}\hlstd{,}\hlnum{3}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotGeneric(Epostworkshop, "{}Post-survey"{}, "{}Instructors.Effective"{}, : could not find function "{}plotGeneric"{}}}\end{kframe}
+\end{knitrout}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# table(Epostworkshop$Workshop.in.US) }
+\hlkwd{plotByStatusGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Workshop.in.US"} \hlstd{,} \hlstr{"the workshop was in the US"}\hlstd{,} \hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,}\hlnum{1}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epostworkshop, "{}Post-survey"{}, "{}Workshop.in.US"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# # age and gender are not shown in the PDF questionnaire}
+\hlcom{# # not very necesary as given in the presurvey}
+\hlcom{# table(Epostworkshop$Age)}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Age"} \hlstd{,} \hlstr{"age"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epostworkshop, "{}Post-survey"{}, "{}Age"{}, "{}age"{}): could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# table(Epostworkshop$Race.White) # given that is the majority}
+\hlkwd{plotByStatusGeneric}\hlstd{(Epostworkshop,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Race.White"} \hlstd{,} \hlstr{"white"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(Epostworkshop, "{}Post-survey"{}, "{}Race.White"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# Filter all of those who did not take the survey in the US }
+\hlstd{EpostworkshopUS} \hlkwb{<-} \hlkwd{subset}\hlstd{(Epostworkshop, Workshop.in.US} \hlopt{==} \hlstr{"Yes"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in subset(Epostworkshop, Workshop.in.US == "{}Yes"{}): object 'Epostworkshop' not found}}\begin{alltt}
+\hlstd{EpostworkshopUS} \hlkwb{<-} \hlkwd{droplevels}\hlstd{(EpostworkshopUS)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in droplevels(EpostworkshopUS): object 'EpostworkshopUS' not found}}\begin{alltt}
+\hlcom{# table(EpostworkshopUS$Workshop.in.US)}
+\hlcom{# table(EpostworkshopUS$Gender)}
+\hlkwd{plotByStatusGeneric}\hlstd{(EpostworkshopUS,} \hlstr{"Post-survey"}\hlstd{,} \hlstr{"Gender"} \hlstd{,} \hlstr{"gender"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByStatusGeneric(EpostworkshopUS, "{}Post-survey"{}, "{}Gender"{}, : could not find function "{}plotByStatusGeneric"{}}}\begin{alltt}
+\hlcom{# ############################################################################}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# not very interesting}
+\hlkwd{multiplot}\hlstd{(}\hlkwd{plotByGender}\hlstd{(EpreworkshopUS,} \hlstr{"Pre- survey"}\hlstd{),}
+          \hlkwd{plotByGender}\hlstd{(EpostworkshopUS,} \hlstr{"Post- survey"}\hlstd{),} \hlkwc{cols}\hlstd{=}\hlnum{2}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in multiplot(plotByGender(EpreworkshopUS, "{}Pre- survey"{}), plotByGender(EpostworkshopUS, : could not find function "{}multiplot"{}}}\begin{alltt}
+\hlcom{# Gender and status only US surveys}
+\hlkwd{plotByGenderStatus}\hlstd{(EpreworkshopUS,} \hlstr{"Pre-survey"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByGenderStatus(EpreworkshopUS, "{}Pre-survey"{}): could not find function "{}plotByGenderStatus"{}}}\begin{alltt}
+\hlkwd{plotByGenderStatus}\hlstd{(EpostworkshopUS,} \hlstr{"Post-survey"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByGenderStatus(EpostworkshopUS, "{}Post-survey"{}): could not find function "{}plotByGenderStatus"{}}}\begin{alltt}
+\hlcom{# filter not answered}
+\hlstd{newpreGS} \hlkwb{<-} \hlkwd{ExcludeNANotGiven}\hlstd{(Epreworkshop)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in ExcludeNANotGiven(Epreworkshop): could not find function "{}ExcludeNANotGiven"{}}}\begin{alltt}
+\hlstd{newpostGS} \hlkwb{<-} \hlkwd{ExcludeNANotGiven}\hlstd{(Epostworkshop)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in ExcludeNANotGiven(Epostworkshop): could not find function "{}ExcludeNANotGiven"{}}}\begin{alltt}
+\hlkwd{plotByGenderStatus}\hlstd{(newpreGS,} \hlstr{"Pre-survey-filtered"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByGenderStatus(newpreGS, "{}Pre-survey-filtered"{}): could not find function "{}plotByGenderStatus"{}}}\begin{alltt}
+\hlkwd{plotByGenderStatus}\hlstd{(newpostGS,} \hlstr{"Post-survey-filtered"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in plotByGenderStatus(newpostGS, "{}Post-survey-filtered"{}): could not find function "{}plotByGenderStatus"{}}}\begin{alltt}
+\hlcom{# Multiplot}
+\hlkwd{multiplot}\hlstd{(}\hlkwd{plotByGender}\hlstd{(newpreGS,} \hlstr{"Pre-survey"}\hlstd{),}
+          \hlkwd{plotByGender}\hlstd{(newpostGS,} \hlstr{"Post-survey"}\hlstd{),} \hlkwc{cols}\hlstd{=}\hlnum{2}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in multiplot(plotByGender(newpreGS, "{}Pre-survey"{}), plotByGender(newpostGS, : could not find function "{}multiplot"{}}}\end{kframe}
+\end{knitrout}
+
+The R session information (including the OS info, R version and all
+packages used):
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{sessionInfo}\hlstd{()}
+\end{alltt}
+\begin{verbatim}
+## R version 3.4.1 (2017-06-30)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS Sierra 10.12.6
+## 
+## Matrix products: default
+## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  base     
+## 
+## other attached packages:
+## [1] knitr_1.17
+## 
+## loaded via a namespace (and not attached):
+## [1] compiler_3.4.1  magrittr_1.5    tools_3.4.1     stringi_1.1.5   highr_0.6      
+## [6] methods_3.4.1   stringr_1.2.0   evaluate_0.10.1
+\end{verbatim}
+\begin{alltt}
+\hlkwd{Sys.time}\hlstd{()}
+\end{alltt}
+\begin{verbatim}
+## [1] "2017-08-31 20:08:03 EDT"
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+\end{document}
