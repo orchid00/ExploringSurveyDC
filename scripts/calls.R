@@ -20,8 +20,8 @@ Epreworkshop <- cleanPreworkshopdata(Epreworkshop)
 ## ---- plotting-presurvey-data ----
 plotByStatusGeneric(Epreworkshop, "Pre-survey", "year.survey" , "year of survey response")
 plotByStatusGeneric(Epreworkshop, "Pre-survey", "First.Time" , "first time taking a DC as learner", c(2,1))
-# table(Epreworkshop$Discipline) # too many variables to plot by Biology and Genetics is the discipline with the majority of answers
-# plotByStatusGeneric(Epreworkshop, "Pre-survey", "Discipline" , "discipline", c(2,10, 11,4,8,5,7,6, 9, 12,3, 14, 15, 16, 17,18, 13,1))
+# Simple barplot for discipline, Biology has the majority of answers
+plotBarplot(Epreworkshop, "Pre-survey", "Discipline", "discipline")
 plotByStatusGeneric(Epreworkshop, "Pre-survey", "OS" , "operative system", c(1,2,4,3))
 # table(Epreworkshop$With.Friend)
 plotByStatusGeneric(Epreworkshop, "Pre-survey", "With.Friend" , "attended with a friend", c(3,1,2))
@@ -71,6 +71,9 @@ plotGeneric(EpreworkshopUS, "Pre-surveyUS","With.Friend" , "came with friend vs 
             "Gender" ) 
 # Names are too long to be shown in categories 
 plotByStatusGeneric(EpreworkshopUS, "Pre-surveyUS", "Race" , "race")
+# wordclouds
+myWordCloud(Epreworkshop$Department, "Pre-survey_Department")
+myWordCloud(Epreworkshop$Hope.to.Learn, "Pre-survey_HopeToLearn")
 # ############################################################################
 ## ---- exploring-postsurvey-data ----
 Epostworkshop <- Exploring("data/postworkshop_public_archived.csv")
@@ -176,6 +179,8 @@ EpostworkshopUS <- droplevels(EpostworkshopUS)
 # table(EpostworkshopUS$Workshop.in.US)
 # table(EpostworkshopUS$Gender)
 plotByStatusGeneric(EpostworkshopUS, "Post-survey", "Gender" , "gender")
+# wordclouds
+myWordCloud(Epostworkshop$Research, "Post-survey_Research")
 # ############################################################################
 ## ---- plotting-pre-postsurvey-dataUS ----
 # not very interesting
