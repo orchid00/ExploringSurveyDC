@@ -10,10 +10,9 @@
 
 # To run the analysis some packages need to be previously installed.
 # Check installed packages before installing new packages.
-list.of.packages <- c("knitr", "tidyr", "tidyverse", "ggplot2", "dplyr",
-                      "readr","purrr", "DBI", "ggmap", "likert",
+list.of.packages <- c("knitr", "tidyverse", "DBI", "ggmap", "likert",
                       "mapproj", "RColorBrewer", "forcats", "extrafont",
-                      "scales")
+                      "scales", "wordcloud", "tm", "SnowballC")
 
 
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
