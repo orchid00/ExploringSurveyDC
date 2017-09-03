@@ -13,13 +13,20 @@ source(file = "scripts/installpkg.R")
 #####################################
 # download files
 
-download.file("https://raw.githubusercontent.com/carpentries/assessment-projects/master/data-carpentry-projects/preworkshop_public_archived.csv", 
-                destfile = "data/preworkshop_public_archived.csv", method = "wininet")
+# download.file("https://raw.githubusercontent.com/carpentries/assessment-projects/master/data-carpentry-projects/preworkshop_public_archived.csv", 
+#                 destfile = "data/preworkshop_public_archived.csv", method = "wininet")
+# 
+#  
+# download.file("https://raw.githubusercontent.com/carpentries/assessment-projects/master/data-carpentry-projects/postworkshop_public_archived.csv", 
+#               destfile = "data/postworkshop_public_archived.csv", method = "wininet")
 
- 
-download.file("https://raw.githubusercontent.com/carpentries/assessment-projects/master/data-carpentry-projects/postworkshop_public_archived.csv", 
-              destfile = "data/postworkshop_public_archived.csv", method = "wininet")
-
+############################################################################
+# Libraries
+library(tidyverse) # includes ggplot2
+library(scales)
+library(extrafont)
+library(SnowballC)
+library(wordcloud)
 
 ############################################################################
 # Set blind-friendly colour Palette
@@ -27,7 +34,7 @@ download.file("https://raw.githubusercontent.com/carpentries/assessment-projects
 # The palette with grey:
 cbPalette <- c("#56B4E9", "#009E73", "#F0E442", "#0072B2", "#999999","#E69F00", "#D55E00", "#CC79A7", "#90EE90")
 # To use for fills, add
-library("ggplot2")
+
 scale_fill_manual(values = cbPalette)
 # To use for line and point colors, add
 scale_colour_manual(values = cbPalette)
@@ -40,7 +47,6 @@ Exploring <- function(filecsv){
     print(paste("Data contains", 
                  dim(ps)[1], "rows and", 
                  dim(ps)[2], "columns")) 
-
     return(ps)
 }
 # ###########################################################################
@@ -131,15 +137,6 @@ cleanPreworkshopdata <- function(df){
   levels(df$Status)[8] <- "Undergraduate Student"
   df$Status <- reorderLevels(df$Status, c(8,3,6,2,7,4,5,1))
   levels(df$Discipline)[1] <- "No Answer"
-  levels(df$Discipline)[3] <- "Neurosciences"
-  levels(df$Discipline)[5] <- "Computer sciences, Electrical Eng"
-  levels(df$Discipline)[6] <- "Geology, Oceanography, Meteorology"
-  levels(df$Discipline)[8] <- "Civil, Mechanical, Chemical Eng"
-  levels(df$Discipline)[10] <- "Biology and Genetics"
-  levels(df$Discipline)[11] <- "Botany, Ecology, Zoology"
-  levels(df$Discipline)[13] <- "Other"
-  levels(df$Discipline)[18] <- "Tech support/Lab tech/support prog"
-  #df$Discipline <- reorderLevels(df$Discipline, c(2,10, 11,4,8,5,7,6, 9, 12,3, 14, 15, 16, 17,18, 13,1))
   levels(df$Have.Dataset)[2] <- "I am working on generating data"
   levels(df$Have.Dataset)[3] <- "I do not have data yet"
   levels(df$Have.Dataset)[4] <- "I have data and done a fair bit of analysis"
@@ -152,14 +149,12 @@ cleanPreworkshopdata <- function(df){
   print(paste("Data contains", 
               dim(df)[1], "rows and", 
               dim(df)[2], "columns")) 
+  write.csv(file = "data/clean_presurvey.csv", df)
   return(df)
 }
 # ###########################################################################
 # Cleaning Epostworkshop
 cleanPostworkshopdata <- function(df){
-  # # Postworkshop Status has one extra level "Response" only in row 1, now removed 
-  #df <- df[-c(1), ]
-  #df <- droplevels(df)
   print(dim(df))
   print(colnames(df))
   # [1] "Start.Date"                "End.Date"                  "When.Taking.Survey"        "First.Time"               
@@ -187,19 +182,18 @@ cleanPostworkshopdata <- function(df){
   print(paste("Data contains", 
               dim(df)[1], "rows and", 
               dim(df)[2], "columns")) 
+  write.csv(file = "data/clean_postsurvey.csv", df)
   return(df)
   
 }
 # ###########################################################################
 # ######### plotting ##############
-# load all necesary packages
-library("ggplot2")
-library("scales")
-library("extrafont")
 font_import(pattern="[T/t]ahoma", prompt = FALSE)
 loadfonts()
 # ###########################################################################
 # Make barplots by Status 
+# Needs a dataframe and a title string, the name of the first column, its string name, and order vector
+# however this last attribute is not necessary
 plotByStatusGeneric <- function(df, ti, colna, colstr, reorderingvec = NULL){
   #StartbyFiltering colna Not Answered
   print(dim(df))
@@ -244,8 +238,10 @@ plotByStatusGeneric <- function(df, ti, colna, colstr, reorderingvec = NULL){
         width = 15, height = 8, dpi = 200)
 }
 # ###########################################################################
-# A try to make a generic plot
-plotGeneric <- function(df, ti, colna, colstr, reorderingvec = NULL, ext,reorderingvec2 = NULL ){
+# A try to make a generic plot separated by status and 2 other facets
+# Needs a dataframe and a title string, the name of the first column, its string name, and order vector
+# The name of the second column, and order vector
+plotGeneric <- function(df, ti, colna, colstr, reorderingvec = NULL, ext, reorderingvec2 = NULL ){
   #StartbyFiltering colna Not Answered
   print(dim(df))
   print(colna)
@@ -298,6 +294,7 @@ plotGeneric <- function(df, ti, colna, colstr, reorderingvec = NULL, ext,reorder
 # Plots for Gender, Race and Age should be only from US respondents
 # ###########################################################################
 # Plots by Gender should be only taken for answers within US 
+# Needs a dataframe and a title string, the order vector is not necessary
 plotByGender <- function(df, ti, reorderingvec=NULL){
   if(!is.null(reorderingvec)){
       df[["Gender"]] <- reorderLevels(df[["Gender"]], reorderingvec)
@@ -318,7 +315,34 @@ plotByGender <- function(df, ti, reorderingvec=NULL){
   #print(ps)
 }
 # ###########################################################################
+# Plot simple barplot
+# Needs a dataframe and a title string, the name of the column, and how to label that column
+plotBarplot <- function(df, ti, xnam, xnamelab){
+  ps <- ggplot(data = df, aes_string( x = xnam, fill= xnam)) +
+    geom_bar(aes(y = (..count..)/sum(..count..))) +
+    scale_fill_manual(values = c(cbPalette, brewer.pal(8, "Set3"))) +
+    theme_light() +
+    labs(x = xnamelab, y = paste("Total respondents", dim(df)[1], "shown in percentages")) +
+    ggtitle(paste(ti, "responses by", xnamelab)) +
+    scale_y_continuous(labels = scales::percent) +
+    theme(plot.title = element_text(hjust = 0.5)) +
+    theme(panel.grid.major.x =  element_blank(),
+          plot.title   = element_text(hjust = 0.5),
+          axis.text.x  = element_blank(),
+          axis.ticks.x = element_blank(),
+          legend.position = "bottom",
+          legend.title    = element_blank(),
+          strip.background = element_rect(fill =  "#888888"),
+          strip.placement = "outside",
+          strip.switch.pad.grid = unit(0.1, "cm"),
+          text=element_text(family="Tahoma", size=12))
+  print(ps)
+  ggsave(filename =  paste("plots/",ti,"_",xnamelab, ".png", sep = ""),
+         width = 12, height = 6, dpi = 120)
+}
+# ###########################################################################
 # Plot by Gender and Status
+# Needs a dataframe and a title string
 plotByGenderStatus <- function(df, ti){
   ps <- ggplot(data = df, aes( x = Gender, fill= Gender)) +
     geom_bar(aes(y = (..count..)/sum(..count..))) +
@@ -338,7 +362,7 @@ plotByGenderStatus <- function(df, ti){
   #       width = 12, height = 6, dpi = 120)
 }
 # ###########################################################################
-# Excluding "Prefer not to say and No answer from Gender and Status"
+# Excluding "Prefer not to say" and "No answer" from Gender and Status
 ExcludeNANotGiven <- function(df){
   newpredf <- data.frame(Gender = factor(df$Gender),
                   Status = factor(df$Status))
@@ -355,4 +379,39 @@ ExcludeNANotGiven <- function(df){
   return(y)
 }
 # ###########################################################################
-
+# Make a Wordcloud , receives a column , and a name for the plot 
+myWordCloud <- function(coln, nam){
+  # Reference example for wordcloud 
+  # http://www.sthda.com/english/wiki/text-mining-and-word-cloud-fundamentals-in-r-5-simple-steps-you-should-know
+  mydata <- as.character(coln) 
+  #First, we need to create a corpus
+  mydata <- Corpus(VectorSource(mydata))
+  #Next, we will convert the corpus to a plain text document
+  mydata <- tm_map(mydata, content_transformer(tolower))
+  # Remove numbers
+  mydata <- tm_map(mydata, removeNumbers)
+  # Remove english common stopwords
+  mydata <- tm_map(mydata, removeWords, stopwords("english"))
+  # Remove your own stop word
+  # specify your stopwords as a character vector
+  mydata <- tm_map(mydata, removeWords, c("the", "this")) 
+  # Remove punctuations
+  mydata <- tm_map(mydata, removePunctuation)
+  # Eliminate extra white spaces
+  mydata <- tm_map(mydata, stripWhitespace)
+  # Text stemming
+  #jeopCorpus <- tm_map(mydata, stemDocument)
+  # matrix
+  dtm <- TermDocumentMatrix(mydata)
+  m <- as.matrix(dtm)
+  v <- sort(rowSums(m), decreasing=TRUE)
+  d <- data.frame(word = names(v), freq=v)
+  head(d, 10)
+  set.seed(1234)
+  png(paste("plots/", nam, "_wordcloud.png", sep = ""), 
+      width = 12, height = 8, units = "in", res = 300)
+  wordcloud(words = d$word, freq = d$freq, scale=c(6,.5),
+            random.order = FALSE,   
+            colors = cbPalette)
+  dev.off()
+}
