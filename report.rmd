@@ -2,7 +2,7 @@
 title: "Report Data Carpentry Assessment"
 author: "Kari L. Jordan and Paula Andrea Martinez"
 date: "12 September 2017"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include = FALSE, cache = FALSE}
