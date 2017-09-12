@@ -22,12 +22,10 @@ source(file = "scripts/installpkg.R")
 
 ############################################################################
 # Libraries
-library(tidyverse) # includes ggplot2
-library(scales)
 library(extrafont)
-library(SnowballC)
-library(wordcloud)
-
+library(RColorBrewer)
+library(scales)
+library(ggplot2)
 ############################################################################
 # Set blind-friendly colour Palette
 # http://www.cookbook-r.com/Graphs/Colors_%28ggplot2%29/
@@ -44,16 +42,16 @@ scale_colour_manual(values = cbPalette)
 Exploring <- function(filecsv){
     ps <- read.csv(filecsv)
     print(filecsv)
-    print(paste("Data contains", 
-                 dim(ps)[1], "rows and", 
-                 dim(ps)[2], "columns")) 
+    #print(paste("Data contains", 
+    #             dim(ps)[1], "rows and", 
+    #             dim(ps)[2], "columns")) 
     return(ps)
 }
 # ###########################################################################
 # Reordering levels of a factor
 reorderLevels <- function(x, vec){
   x <- factor(x,levels(x)[vec])
-  print(levels(x))
+  #print(levels(x))
   return(x)
 }
 # ###########################################################################
@@ -112,7 +110,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 # ###########################################################################
 # Cleaning Epreworkshop
 cleanPreworkshopdata <- function(df){
-  print(colnames(df))
+  #print(colnames(df))
   # "Start.Date" # munging to year.survey
   # "End.Date"                 "When.Taking.Survey" # ignored      
   # "First.Time" # ignored
@@ -155,8 +153,8 @@ cleanPreworkshopdata <- function(df){
 # ###########################################################################
 # Cleaning Epostworkshop
 cleanPostworkshopdata <- function(df){
-  print(dim(df))
-  print(colnames(df))
+  #print(dim(df))
+  #print(colnames(df))
   # [1] "Start.Date"                "End.Date"                  "When.Taking.Survey"        "First.Time"               
   # [5] "Research"                  "Status"                    "Status.Other"              "Involvement"              
   # [9] "Practical.Knowledge"       "Organize.Data"             "Use.OpenRefine"            "Import.Python"            
@@ -196,10 +194,10 @@ loadfonts()
 # however this last attribute is not necessary
 plotByStatusGeneric <- function(df, ti, colna, colstr, reorderingvec = NULL){
   #StartbyFiltering colna Not Answered
-  print(dim(df))
-  print(colna)
+  #print(dim(df))
+  #print(colna)
   y <- droplevels(subset(df, df[[colna]] != ""))
-  print(dim(y))
+  #print(dim(y))
   print(table(y[[colna]]))
   if(!is.null(reorderingvec)){
     y[[colna]] <- reorderLevels(y[[colna]], reorderingvec)
@@ -216,7 +214,7 @@ plotByStatusGeneric <- function(df, ti, colna, colstr, reorderingvec = NULL){
     scale_fill_manual(values = cbPalette) +
     theme_light() +
     labs(x = "Status", y = paste("Total respondents", dim(y)[1], "shown in percentages")) +
-    ggtitle(paste(ti, "responses by status and", colstr)) +
+    ggtitle(paste(ti, "\n responses by status and", colstr)) +
     scale_y_continuous(labels = scales::percent) +
     theme(plot.title = element_text(hjust = 0.5)) +
     theme(panel.grid.major.x = element_blank(),
@@ -227,9 +225,9 @@ plotByStatusGeneric <- function(df, ti, colna, colstr, reorderingvec = NULL){
           strip.background = element_rect(fill =  "#888888"),
           strip.placement = "outside",
           strip.switch.pad.grid = unit(0.1, "cm"),
-          text = element_text(family="Tahoma", size=12))+
+          text = element_text(family="Tahoma", size = 11))+
     facet_grid(reformulate(colna), ".") # . ~ colna
-  ps <- ps +  annotate(geom = "text", label = paste0(perc, "%"), size = 4, 
+  ps <- ps +  ggplot2::annotate(geom = "text", label = paste0(perc, "%"), size = 4, 
                        x = 4.5, y = dim(y)[1]/6000, fontface="bold",
                        colour = "#888888", family="Tahoma")
   print(ps)
@@ -242,20 +240,22 @@ plotByStatusGeneric <- function(df, ti, colna, colstr, reorderingvec = NULL){
 # Needs a dataframe and a title string, the name of the first column, its string name, and order vector
 # The name of the second column, and order vector
 plotGeneric <- function(df, ti, colna, colstr, reorderingvec = NULL, ext, reorderingvec2 = NULL ){
+  #print(dim(df))
+  #print(colna)
+  #print(ext)
   #StartbyFiltering colna Not Answered
-  print(dim(df))
-  print(colna)
-  print(ext)
   y <- droplevels(subset(df, df[[colna]] != ""))
   y <- droplevels(subset(y, y[[ext]] != ""))
-  print(dim(y))
+  #print(dim(y))
   if(!is.null(reorderingvec)){
     y[[colna]] <- reorderLevels(y[[colna]], reorderingvec)
   }
   if(!is.null(reorderingvec2)){
     y[[ext]] <- reorderLevels(y[[ext]], reorderingvec2)
   }
-  print(table(y[[colna]],y[[ext]]))
+  #print(table(y[[colna]],y[[ext]]))
+  print(table(y[[colna]]))
+  print(table(y[[ext]]))
   numoffacets <- length((table(y[[colna]],y[[ext]])))
   perc <- c()
   for (f in 1:numoffacets){
@@ -268,7 +268,7 @@ plotGeneric <- function(df, ti, colna, colstr, reorderingvec = NULL, ext, reorde
     scale_fill_manual(values = cbPalette) +
     theme_light() + 
     labs(x = "Status", y = paste("Total respondents", dim(y)[1], "shown in percentages")) +
-    ggtitle(paste(ti, "responses by status and", colstr)) +
+    ggtitle(paste(ti, "\n responses by status and", colstr)) +
     scale_y_continuous( labels = percent_format())+
     theme(panel.grid.major.x =  element_blank(),
           plot.title   = element_text(hjust = 0.5),
@@ -279,10 +279,10 @@ plotGeneric <- function(df, ti, colna, colstr, reorderingvec = NULL, ext, reorde
           strip.background = element_rect(fill =  "#888888"),
           strip.placement = "outside",
           strip.switch.pad.grid = unit(0.1, "cm"),
-          text=element_text(family="Tahoma", size=12))+
+          text=element_text(family="Tahoma", size = 11))+
     #facet_grid(reformulate(colna), ".") # . ~ colna
     facet_grid(eval(reformulate(colna, ext)))
-  ps <- ps +  annotate(geom = "text", label = paste0(perc, "%"), size = 4, 
+  ps <- ps +  ggplot2::annotate(geom = "text", label = paste0(perc, "%"), size = 4, 
                        x = 4.5, y = dim(y)[1]/6000, fontface="bold",
                        colour = "#888888", family="Tahoma")
   ggsave(filename =  paste("./plots/", ti, "_",ext, "_", gsub("\\.", "",colna),
@@ -305,25 +305,26 @@ plotByGender <- function(df, ti, reorderingvec=NULL){
     scale_fill_manual(values = cbPalette) +
     theme_light() +
     labs(x = "Gender", y = paste("Total respondents", dim(df)[1], "shown in percentages")) +
-    ggtitle(paste(ti, "responses by gender") ) +
+    ggtitle(paste(ti, "\n responses by gender") ) +
     scale_y_continuous(labels = scales::percent, limits = c(0, 0.7)) +
     theme(plot.title = element_text(hjust = 0.5)) +
     theme(axis.text.x=element_blank(),
           axis.ticks.x=element_blank(),
           legend.position="bottom",
           legend.title = element_blank())
-  #print(ps)
+  print(ps)
 }
 # ###########################################################################
 # Plot simple barplot
 # Needs a dataframe and a title string, the name of the column, and how to label that column
 plotBarplot <- function(df, ti, xnam, xnamelab){
+  print(table(df[[xnam]]))
   ps <- ggplot(data = df, aes_string( x = xnam, fill= xnam)) +
     geom_bar(aes(y = (..count..)/sum(..count..))) +
     scale_fill_manual(values = c(cbPalette, brewer.pal(8, "Set3"))) +
     theme_light() +
     labs(x = xnamelab, y = paste("Total respondents", dim(df)[1], "shown in percentages")) +
-    ggtitle(paste(ti, "responses by", xnamelab)) +
+    ggtitle(paste(ti, "\n responses by", xnamelab)) +
     scale_y_continuous(labels = scales::percent) +
     theme(plot.title = element_text(hjust = 0.5)) +
     theme(panel.grid.major.x =  element_blank(),
@@ -335,7 +336,7 @@ plotBarplot <- function(df, ti, xnam, xnamelab){
           strip.background = element_rect(fill =  "#888888"),
           strip.placement = "outside",
           strip.switch.pad.grid = unit(0.1, "cm"),
-          text=element_text(family="Tahoma", size=12))
+          text=element_text(family="Tahoma", size = 11))
   print(ps)
   ggsave(filename =  paste("plots/",ti,"_",xnamelab, ".png", sep = ""),
          width = 12, height = 6, dpi = 120)
@@ -349,7 +350,7 @@ plotByGenderStatus <- function(df, ti){
     scale_fill_manual(values = cbPalette) +
     theme_light() +
     labs(x = "Gender", y = paste("Total respondents", dim(df)[1], "shown in percentages")) +
-    ggtitle(paste(ti, "responses by gender and status")) +
+    ggtitle(paste(ti, "\n responses by gender and status")) +
     scale_y_continuous(labels = scales::percent) +
     theme(plot.title = element_text(hjust = 0.5)) +
     theme(axis.text.x=element_blank(),
@@ -366,15 +367,15 @@ plotByGenderStatus <- function(df, ti){
 ExcludeNANotGiven <- function(df){
   newpredf <- data.frame(Gender = factor(df$Gender),
                   Status = factor(df$Status))
-  print(head(newpredf))
-  print(str(newpredf))
-  print(table(newpredf$Gender))
-  print(table(newpredf))
+  #print(head(newpredf))
+  #print(str(newpredf))
+  #print(table(newpredf$Gender))
+  #print(table(newpredf))
   x <- subset(newpredf, newpredf$Gender == "Male" |newpredf$Gender == "Female", drop = T)
   x <- subset(x, x$Status != "No Answer", drop = T)
-  print(table(x))
+  #print(table(x))
   y <- droplevels(x)
-  print(table(y))
+  #print(table(y))
   print(dim(y))
   return(y)
 }
@@ -383,6 +384,9 @@ ExcludeNANotGiven <- function(df){
 myWordCloud <- function(coln, nam){
   # Reference example for wordcloud 
   # http://www.sthda.com/english/wiki/text-mining-and-word-cloud-fundamentals-in-r-5-simple-steps-you-should-know
+  library(tm)
+  library(SnowballC)
+  library(wordcloud)
   mydata <- as.character(coln) 
   #First, we need to create a corpus
   mydata <- Corpus(VectorSource(mydata))
@@ -408,10 +412,8 @@ myWordCloud <- function(coln, nam){
   d <- data.frame(word = names(v), freq=v)
   head(d, 10)
   set.seed(1234)
-  png(paste("plots/", nam, "_wordcloud.png", sep = ""), 
-      width = 12, height = 8, units = "in", res = 300)
-  wordcloud(words = d$word, freq = d$freq, scale=c(6,.5),
+
+  wordcloud(words = d$word, freq = d$freq, scale=c(3,.3),
             random.order = FALSE,   
             colors = cbPalette)
-  dev.off()
 }

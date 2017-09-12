@@ -189,8 +189,8 @@ myWordCloud(Epostworkshop$Research, "Post-survey_Research")
 # ############################################################################
 ## ---- plotting-pre-postsurvey-dataUS ----
 # not very interesting
-multiplot(plotByGender(EpreworkshopUS, "Pre- survey"),
-          plotByGender(EpostworkshopUS, "Post- survey"), cols=2)
+#multiplot(plotByGender(EpreworkshopUS, "Pre- survey"),
+#          plotByGender(EpostworkshopUS, "Post- survey"), cols=2)
 # Gender and status only US surveys
 plotByGenderStatus(EpreworkshopUS, "Pre-survey")
 plotByGenderStatus(EpostworkshopUS, "Post-survey")
@@ -200,5 +200,5 @@ newpostGS <- ExcludeNANotGiven(Epostworkshop)
 plotByGenderStatus(newpreGS, "Pre-survey-filtered")
 plotByGenderStatus(newpostGS, "Post-survey-filtered")
 # Multiplot
-multiplot(plotByGender(newpreGS, "Pre-survey"),
-          plotByGender(newpostGS, "Post-survey"), cols=2)
+#multiplot(plotByGender(newpreGS, "Pre-survey"),
+#          plotByGender(newpostGS, "Post-survey"), cols=2)
