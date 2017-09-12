@@ -400,7 +400,7 @@ myWordCloud <- function(coln, nam){
   # Eliminate extra white spaces
   mydata <- tm_map(mydata, stripWhitespace)
   # Text stemming
-  #jeopCorpus <- tm_map(mydata, stemDocument)
+  #mydata <- tm_map(mydata, stemDocument)
   # matrix
   dtm <- TermDocumentMatrix(mydata)
   m <- as.matrix(dtm)

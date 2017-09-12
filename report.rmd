@@ -1,0 +1,21 @@
+---
+title: "Report Data Carpentry Assessment"
+author: "Kari L. Jordan and Paula Andrea Martinez"
+date: "12 September 2017"
+output: html_document
+---
+
+```{r setup, include = FALSE, cache = FALSE}
+knitr::opts_chunk$set(error = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML.
+
+
+```{r calls, echo = FALSE, message = FALSE, warning = FALSE}
+source(file = "scripts/calls.R")
+```
+
+
